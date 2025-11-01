@@ -45,7 +45,7 @@ property parent : script "BetterTouchTool Library"
         (string)))))
 
 ================================================================================
-TODO: current application method call
+current application method call
 ================================================================================
 
 set myString to current application's NSString's stringWithString:"hello"
@@ -56,9 +56,10 @@ set myString to current application's NSString's stringWithString:"hello"
   (set_statement
     target: (expression (identifier))
     value: (expression
-      (property_access
+      (method_call
         object: (expression
           (property_access
             object: (expression (current_application))
             property: (property_name (identifier))))
-        property: (property_name (identifier))))))
+        method: (method_call_label)
+        argument: (expression (string))))))

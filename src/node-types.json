@@ -4,11 +4,35 @@
     "named": true,
     "fields": {
       "command": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
+            "type": "create_window",
+            "named": true
+          },
+          {
+            "type": "do_javascript",
+            "named": true
+          },
+          {
+            "type": "do_shell_script",
+            "named": true
+          },
+          {
             "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "property_name",
+            "named": true
+          },
+          {
+            "type": "system_attribute",
+            "named": true
+          },
+          {
+            "type": "write_text",
             "named": true
           }
         ]
@@ -16,7 +40,7 @@
     },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "command_parameter",
@@ -28,6 +52,10 @@
         },
         {
           "type": "expression",
+          "named": true
+        },
+        {
+          "type": "using_clause",
           "named": true
         },
         {
@@ -121,10 +149,6 @@
           },
           {
             "type": "and",
-            "named": false
-          },
-          {
-            "type": "as",
             "named": false
           },
           {
@@ -446,11 +470,6 @@
     }
   },
   {
-    "type": "current_application",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "direct_parameter",
     "named": true,
     "fields": {
@@ -460,6 +479,14 @@
         "types": [
           {
             "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "string",
             "named": true
           }
         ]
@@ -492,7 +519,7 @@
       },
       "object": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "expression",
@@ -777,6 +804,10 @@
           "named": true
         },
         {
+          "type": "method_call",
+          "named": true
+        },
+        {
           "type": "missing_value",
           "named": true
         },
@@ -789,7 +820,15 @@
           "named": true
         },
         {
+          "type": "path_to_expression",
+          "named": true
+        },
+        {
           "type": "property_access",
+          "named": true
+        },
+        {
+          "type": "property_name",
           "named": true
         },
         {
@@ -806,6 +845,10 @@
         },
         {
           "type": "string",
+          "named": true
+        },
+        {
+          "type": "type_cast",
           "named": true
         },
         {
@@ -1177,6 +1220,42 @@
     }
   },
   {
+    "type": "method_call",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      },
+      "method": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "method_call_label",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "missing_value",
     "named": true,
     "fields": {}
@@ -1350,7 +1429,34 @@
       "required": true,
       "types": [
         {
+          "type": "application_command",
+          "named": true
+        },
+        {
           "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "path_to_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "path_to_command",
+          "named": true
+        },
+        {
+          "type": "property_name",
           "named": true
         }
       ]
@@ -1492,10 +1598,78 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
+          "type": "current_session",
+          "named": true
+        },
+        {
+          "type": "current_tab",
+          "named": true
+        },
+        {
+          "type": "current_window",
+          "named": true
+        },
+        {
+          "type": "every_item",
+          "named": true
+        },
+        {
+          "type": "every_window",
+          "named": true
+        },
+        {
+          "type": "first_button",
+          "named": true
+        },
+        {
+          "type": "first_document",
+          "named": true
+        },
+        {
+          "type": "first_item",
+          "named": true
+        },
+        {
+          "type": "first_process",
+          "named": true
+        },
+        {
+          "type": "first_window",
+          "named": true
+        },
+        {
+          "type": "front_document",
+          "named": true
+        },
+        {
+          "type": "front_window",
+          "named": true
+        },
+        {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "radio_button",
+          "named": true
+        },
+        {
+          "type": "radio_group",
+          "named": true
+        },
+        {
+          "type": "scroll_area",
+          "named": true
+        },
+        {
+          "type": "selected_tab",
+          "named": true
+        },
+        {
+          "type": "selected_window",
           "named": true
         }
       ]
@@ -2921,6 +3095,32 @@
     }
   },
   {
+    "type": "type_cast",
+    "named": true,
+    "fields": {
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "unary_expression",
     "named": true,
     "fields": {
@@ -2977,6 +3177,25 @@
       "types": [
         {
           "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "using_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "list",
+          "named": true
+        },
+        {
+          "type": "property_name",
           "named": true
         }
       ]
@@ -3167,8 +3386,24 @@
     "named": false
   },
   {
-    "type": "current",
-    "named": false
+    "type": "create_window",
+    "named": true
+  },
+  {
+    "type": "current_application",
+    "named": true
+  },
+  {
+    "type": "current_session",
+    "named": true
+  },
+  {
+    "type": "current_tab",
+    "named": true
+  },
+  {
+    "type": "current_window",
+    "named": true
   },
   {
     "type": "diacriticals",
@@ -3177,6 +3412,14 @@
   {
     "type": "div",
     "named": false
+  },
+  {
+    "type": "do_javascript",
+    "named": true
+  },
+  {
+    "type": "do_shell_script",
+    "named": true
   },
   {
     "type": "does not contain",
@@ -3215,6 +3458,14 @@
     "named": false
   },
   {
+    "type": "every_item",
+    "named": true
+  },
+  {
+    "type": "every_window",
+    "named": true
+  },
+  {
     "type": "exit",
     "named": false
   },
@@ -3227,12 +3478,40 @@
     "named": false
   },
   {
+    "type": "first_button",
+    "named": true
+  },
+  {
+    "type": "first_document",
+    "named": true
+  },
+  {
+    "type": "first_item",
+    "named": true
+  },
+  {
+    "type": "first_process",
+    "named": true
+  },
+  {
+    "type": "first_window",
+    "named": true
+  },
+  {
     "type": "framework",
     "named": false
   },
   {
     "type": "from",
     "named": false
+  },
+  {
+    "type": "front_document",
+    "named": true
+  },
+  {
+    "type": "front_window",
+    "named": true
   },
   {
     "type": "greater than",
@@ -3335,6 +3614,10 @@
     "named": false
   },
   {
+    "type": "method_call_label",
+    "named": true
+  },
+  {
     "type": "missing",
     "named": false
   },
@@ -3375,12 +3658,24 @@
     "named": false
   },
   {
+    "type": "path_to_command",
+    "named": true
+  },
+  {
     "type": "property",
     "named": false
   },
   {
     "type": "punctuation",
     "named": false
+  },
+  {
+    "type": "radio_button",
+    "named": true
+  },
+  {
+    "type": "radio_group",
+    "named": true
   },
   {
     "type": "ref to",
@@ -3411,8 +3706,20 @@
     "named": false
   },
   {
+    "type": "scroll_area",
+    "named": true
+  },
+  {
     "type": "seconds",
     "named": false
+  },
+  {
+    "type": "selected_tab",
+    "named": true
+  },
+  {
+    "type": "selected_window",
+    "named": true
   },
   {
     "type": "set",
@@ -3425,6 +3732,10 @@
   {
     "type": "starts with",
     "named": false
+  },
+  {
+    "type": "system_attribute",
+    "named": true
   },
   {
     "type": "tell",
@@ -3467,6 +3778,10 @@
     "named": false
   },
   {
+    "type": "using",
+    "named": false
+  },
+  {
     "type": "value",
     "named": false
   },
@@ -3489,6 +3804,10 @@
   {
     "type": "without",
     "named": false
+  },
+  {
+    "type": "write_text",
+    "named": true
   },
   {
     "type": "yes",

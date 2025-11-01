@@ -1,9 +1,11 @@
-node_modules
-bin
-build
+*.dll
+*.dylib
 *.log
-
-additional_examples/*
+*.so
 .DS_Store
 .claude/*
 CLAUDE.md
+additional_examples/*
+bin
+build
+node_modules

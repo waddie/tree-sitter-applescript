@@ -5,6 +5,11 @@
 module.exports = grammar({
   name: 'applescript',
 
+  externals: $ => [
+    $.method_call_label,  // Objective-C method call: stringWithString:
+    $.path_to_command,    // "path to" as atomic command
+  ],
+
   extras: $ => [
     $.comment,
     /[\s\f\uFEFF\u2060\u200B]|\\\r?\n|¬\r?\n/,
@@ -39,6 +44,14 @@ module.exports = grammar({
     [$.on_error_clause, $.expression],
     [$.property_name, $.expression],
     [$.property_name],
+    [$.direct_parameter, $.labeled_parameter, $.property_name, $.expression],
+    [$.on_error_clause, $.property_name, $.expression],
+    [$.application_command, $.property_name],
+    [$.direct_parameter, $.application_command, $.command_parameter, $.property_name, $.expression],
+    [$.parameter_list, $.property_name, $.expression],
+    [$.expression],
+    [$.direct_parameter, $.command_parameter, $.property_name, $.expression, $.element_access],
+    [$._statement, $.expression],  // application_command in both statement and expression contexts
   ],
 
   rules: {
@@ -383,7 +396,11 @@ module.exports = grammar({
       optional(field('end_name', $.identifier)),
     )),
 
-    direct_parameter: $ => prec(1, field('parameter', $.identifier)),
+    direct_parameter: $ => prec(1, field('parameter', choice(
+      $.identifier,
+      $.string,
+      $.number,
+    ))),
 
     labeled_parameter: $ => prec(2, choice(
       seq(
@@ -402,19 +419,84 @@ module.exports = grammar({
       repeat(seq(',', $.identifier)),
     ),
 
+    // Known multi-word commands (tokens for commands without keywords, sequences for those with keywords)
+    system_attribute: $ => token(prec(10, seq('system', /\s+/, 'attribute'))),
+    do_shell_script: $ => token(prec(10, seq('do', /\s+/, 'shell', /\s+/, 'script'))),
+    do_javascript: $ => token(prec(10, seq('do', /\s+/, /[Jj]ava[Ss]cript/))),
+    // path_to: Disabled for now due to conflicts with "POSIX path of" expressions
+    write_text: $ => token(prec(10, seq('write', /\s+/, 'text'))),
+    create_window: $ => token(prec(10, seq('create', /\s+/, 'window'))),
+
+    // Known multi-word property names (common Terminal.app and other app properties)
+    current_session: $ => token(prec(10, seq('current', /\s+/, 'session'))),
+    current_window: $ => token(prec(10, seq('current', /\s+/, 'window'))),
+    current_tab: $ => token(prec(10, seq('current', /\s+/, 'tab'))),
+    first_window: $ => token(prec(10, seq('first', /\s+/, 'window'))),
+    first_process: $ => token(prec(10, seq('first', /\s+/, 'process'))),
+    first_button: $ => token(prec(10, seq('first', /\s+/, 'button'))),
+    first_document: $ => token(prec(10, seq('first', /\s+/, 'document'))),
+    first_item: $ => token(prec(10, seq('first', /\s+/, 'item'))),
+    front_document: $ => token(prec(10, seq('front', /\s+/, 'document'))),
+    front_window: $ => token(prec(10, seq('front', /\s+/, 'window'))),
+    selected_tab: $ => token(prec(10, seq('selected', /\s+/, 'tab'))),
+    selected_window: $ => token(prec(10, seq('selected', /\s+/, 'window'))),
+    every_item: $ => token(prec(10, seq('every', /\s+/, 'item'))),
+    every_window: $ => token(prec(10, seq('every', /\s+/, 'window'))),
+    // UI Scripting patterns
+    scroll_area: $ => token(prec(10, seq('scroll', /\s+/, 'area'))),
+    radio_group: $ => token(prec(10, seq('radio', /\s+/, 'group'))),
+    radio_button: $ => token(prec(10, seq('radio', /\s+/, 'button'))),
+
     // Application Command
-    application_command: $ => prec.right(1, seq(
-      field('command', $.identifier),
-      repeat1(choice(
-        $.direct_parameter,
-        $.command_parameter,
-        $.expression,
+    application_command: $ => choice(
+      // Known multi-word commands (highest precedence)
+      prec.right(5, seq(
+        field('command', choice(
+          $.system_attribute,
+          $.do_shell_script,
+          $.do_javascript,
+          // Note: path_to_command is only used in path_to_expression, not as a command
+          $.write_text,
+          $.create_window,
+        )),
+        optional(repeat1(choice(
+          $.direct_parameter,
+          $.command_parameter,
+          $.expression,
+        ))),
+        optional(choice(
+          $.with_clause,
+          $.without_clause,
+          $.using_clause,
+        )),
       )),
-      optional(choice(
-        $.with_clause,
-        $.without_clause,
+      // Generic command with parameters (medium precedence)
+      prec.right(2, seq(
+        field('command', choice(
+          $.identifier,
+          alias(seq($.identifier, repeat1($.identifier)), $.property_name),
+        )),
+        repeat1(choice(
+          $.direct_parameter,
+          $.command_parameter,
+          $.expression,
+        )),
+        optional(choice(
+          $.with_clause,
+          $.without_clause,
+          $.using_clause,
+        )),
       )),
-    )),
+      // Multi-word command without parameters (lower precedence)
+      prec.right(1, seq(
+        field('command', alias(seq($.identifier, repeat1($.identifier)), $.property_name)),
+        optional(choice(
+          $.with_clause,
+          $.without_clause,
+          $.using_clause,
+        )),
+      )),
+    ),
 
     command_parameter: $ => seq(
       field('label', $.identifier),
@@ -431,26 +513,77 @@ module.exports = grammar({
       field('option', $.property_name),
     ),
 
+    using_clause: $ => seq(
+      'using',
+      choice(
+        $.property_name,
+        $.list,
+      ),
+    ),
+
     // Property name (can be multi-word)
     property_name: $ => choice(
-      $.identifier,
+      // Known multi-word property tokens (highest precedence)
+      $.current_session,
+      $.current_window,
+      $.current_tab,
+      $.first_window,
+      $.first_process,
+      $.first_button,
+      $.first_document,
+      $.first_item,
+      $.front_document,
+      $.front_window,
+      $.selected_tab,
+      $.selected_window,
+      $.every_item,
+      $.every_window,
+      $.scroll_area,
+      $.radio_group,
+      $.radio_button,
+      // Generic multi-word properties
       seq($.identifier, repeat1($.identifier)),
+      // Single identifier (lowest precedence)
+      $.identifier,
     ),
 
     // Expression Statement
     expression_statement: $ => $.expression,
 
+    // Objective-C Method Call (AppleScriptObjC)
+    method_call: $ => prec.right(16, seq(
+      field('object', $.expression),
+      '\'s',
+      field('method', $.method_call_label),
+      ':',
+      field('argument', $.expression),
+      // TODO: Support multiple labeled parameters
+    )),
+
+    // Path to expression (special case of command used as expression)
+    path_to_expression: $ => prec(14, seq(
+      $.path_to_command,
+      choice(
+        prec.dynamic(1, $.property_name),  // Prefer multi-word properties
+        $.expression,                       // Fallback to any expression
+      ),
+    )),
+
     // Expressions
     expression: $ => choice(
       $.binary_expression,
       $.unary_expression,
+      $.type_cast,  // Type cast with 'as' keyword
       $.parenthesized_expression,
       $.application_expression,
+      $.path_to_expression,  // "path to" command in expression context
+      $.method_call,  // Must be before property_access (higher precedence)
       $.property_access,
       $.element_access,
       $.list,
       $.record,
       $.identifier,
+      prec.dynamic(-1, $.property_name),  // Lower dynamic precedence so identifier is preferred
       $.string,
       $.number,
       $.boolean,
@@ -483,7 +616,6 @@ module.exports = grammar({
           'starts with', 'start with', 'begins with', 'begin with',
           'ends with', 'end with',
         )],
-        [prec.left, 4, 'as'],
       ];
 
       return choice(...table.map(([fn, precedence, operator]) =>
@@ -495,6 +627,13 @@ module.exports = grammar({
       ));
     },
 
+    // Type cast expression (e.g., "x as text", "(path to home) as alias")
+    type_cast: $ => prec.left(4, seq(
+      field('value', $.expression),
+      'as',
+      field('type', $.identifier),
+    )),
+
     unary_expression: $ => choice(
       prec(13, seq('-', field('operand', $.expression))),
       prec(13, seq('+', field('operand', $.expression))),
@@ -503,7 +642,10 @@ module.exports = grammar({
 
     parenthesized_expression: $ => seq(
       '(',
-      $.expression,
+      choice(
+        $.expression,
+        $.application_command,  // Allow commands in parentheses (e.g., for command results)
+      ),
       ')',
     ),
 
@@ -523,6 +665,7 @@ module.exports = grammar({
       choice(
         seq(field('index', $.number), 'of', field('object', $.expression)),
         seq('of', field('object', $.expression)),
+        field('index', $.number),  // Allow implicit object (e.g., "window 1")
       ),
     )),
 
@@ -562,7 +705,7 @@ module.exports = grammar({
 
     missing_value: $ => seq('missing', 'value'),
 
-    current_application: $ => seq('current', 'application'),
+    current_application: $ => token(seq('current', /\s+/, 'application')),
 
     script_reference: $ => seq('script', $.string),
 

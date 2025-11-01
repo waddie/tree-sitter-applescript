@@ -8,9 +8,7 @@ create window with default profile
 
 (source_file
   (application_command
-    command: (identifier)
-    (direct_parameter
-      parameter: (identifier))
+    command: (create_window)
     (with_clause
       option: (property_name
         (identifier)
@@ -68,7 +66,7 @@ activate window
       parameter: (identifier))))
 
 ================================================================================
-TODO: system attribute command
+system attribute command
 ================================================================================
 
 set bundleId to (system attribute "alfred_workflow_bundleid")
@@ -79,14 +77,14 @@ set bundleId to (system attribute "alfred_workflow_bundleid")
   (set_statement
     target: (expression (identifier))
     value: (expression
-      (application_command
-        command: (identifier)
-        (command_parameter
-          label: (identifier)
-          value: (expression (string)))))))
+      (parenthesized_expression
+        (application_command
+          command: (system_attribute)
+          (direct_parameter
+            parameter: (string)))))))
 
 ================================================================================
-TODO: do shell script command
+do shell script command
 ================================================================================
 
 do shell script "pwd"
@@ -95,10 +93,7 @@ do shell script "pwd"
 
 (source_file
   (application_command
-    command: (identifier)
-    (command_parameter
-      label: (identifier)
-      value: (expression (identifier)))
+    command: (do_shell_script)
     (direct_parameter
       parameter: (string))))
 
@@ -112,18 +107,19 @@ do JavaScript theCode in document 1
 
 (source_file
   (application_command
-    command: (identifier)
-    (command_parameter
-      label: (identifier)
-      value: (expression (identifier)))
-    (command_parameter
-      label: (identifier)
-      value: (expression (identifier)))
+    command: (do_javascript)
     (direct_parameter
-      parameter: (number))))
+      parameter: (identifier))
+    (command_parameter
+      label: (identifier)
+      value: (expression
+        (element_access
+          element: (property_name (identifier))
+          index: (number (integer))
+          object: (expression (identifier)))))))
 
 ================================================================================
-TODO: path to command
+path to command
 ================================================================================
 
 set homePath to path to home folder
@@ -134,20 +130,17 @@ set homePath to path to home folder
   (set_statement
     target: (expression (identifier))
     value: (expression
-      (application_command
-        command: (identifier)
-        (command_parameter
-          label: (identifier)
-          value: (expression (identifier)))
-        (command_parameter
-          label: (identifier)
-          value: (expression (identifier)))))))
+      (path_to_expression
+        (path_to_command)
+        (property_name
+          (identifier)
+          (identifier))))))
 
 ================================================================================
-TODO: path to with POSIX path of
+path to with POSIX path of
 ================================================================================
 
-set _home to POSIX path of ((path to home folder) as alias)
+set _home to POSIX path of (path to home folder as alias)
 
 --------------------------------------------------------------------------------
 
@@ -158,20 +151,19 @@ set _home to POSIX path of ((path to home folder) as alias)
       (element_access
         element: (property_name (identifier) (identifier))
         object: (expression
-          (type_cast
-            value: (expression
-              (application_command
-                command: (identifier)
-                (command_parameter
-                  label: (identifier)
-                  value: (expression (identifier)))
-                (command_parameter
-                  label: (identifier)
-                  value: (expression (identifier)))))
-            type: (identifier)))))))
+          (parenthesized_expression
+            (expression
+              (type_cast
+                value: (expression
+                  (path_to_expression
+                    (path_to_command)
+                    (property_name
+                      (identifier)
+                      (identifier))))
+                type: (identifier)))))))))
 
 ================================================================================
-TODO: Multi-word property in 'of' expression
+Multi-word property in 'of' expression
 ================================================================================
 
 tell current session of current window
@@ -184,14 +176,14 @@ end tell
   (tell_statement
     target: (expression
       (element_access
-        element: (property_name (identifier) (identifier))
+        element: (property_name (current_session))
         object: (expression
-          (property_name (identifier) (identifier)))))
+          (property_name (current_window)))))
     (expression_statement
       (expression (identifier)))))
 
 ================================================================================
-TODO: Nested multi-word 'of' expressions
+Nested multi-word 'of' expressions
 ================================================================================
 
 set myTab to current tab of first window
@@ -206,18 +198,108 @@ end tell
     target: (expression (identifier))
     value: (expression
       (element_access
-        element: (property_name (identifier) (identifier))
+        element: (property_name (current_tab))
         object: (expression
-          (element_access
-            element: (property_name (identifier))
-            object: (expression (identifier)))))))
+          (property_name (first_window))))))
   (tell_statement
     target: (expression (identifier))
     (expression_statement
       (expression (identifier)))))
 
 ================================================================================
-TODO: Multi-word command
+Multi-word property - System Events UI scripting
+================================================================================
+
+tell application "System Events"
+    set btn to first button of scroll area 1 of window 1
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (set_statement
+      target: (expression (identifier))
+      value: (expression
+        (element_access
+          element: (property_name (first_button))
+          object: (expression
+            (element_access
+              element: (property_name (scroll_area))
+              index: (number (integer))
+              object: (expression
+                (element_access
+                  element: (property_name (identifier))
+                  index: (number (integer)))))))))))
+================================================================================
+Multi-word property - front document
+================================================================================
+
+tell application "Safari"
+    set theURL to URL of front document
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (set_statement
+      target: (expression (identifier))
+      value: (expression
+        (element_access
+          element: (property_name (identifier))
+          object: (expression
+            (property_name (front_document))))))))
+================================================================================
+Multi-word property - every item
+================================================================================
+
+set oldFiles to every item of myFolder
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (element_access
+        element: (property_name (every_item))
+        object: (expression (identifier))))))
+
+================================================================================
+Multi-word property - selected tab
+================================================================================
+
+tell application "Safari"
+    set tabURL to URL of selected tab of front window
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (set_statement
+      target: (expression (identifier))
+      value: (expression
+        (element_access
+          element: (property_name (identifier))
+          object: (expression
+            (element_access
+              element: (property_name (selected_tab))
+              object: (expression
+                (property_name (front_window))))))))))
+
+================================================================================
+Multi-word command
 ================================================================================
 
 tell application "Terminal"
@@ -232,14 +314,14 @@ end tell
       (application_expression
         name: (string)))
     (application_command
-      command: (property_name (identifier) (identifier))
+      command: (write_text)
       (direct_parameter
         parameter: (string))
       (with_clause
         option: (property_name (identifier))))))
 
 ================================================================================
-TODO: Multi-word command without parameters
+Multi-word command without parameters
 ================================================================================
 
 tell application "Terminal"
@@ -254,10 +336,10 @@ end tell
       (application_expression
         name: (string)))
     (application_command
-      command: (property_name (identifier) (identifier)))))
+      command: (create_window))))
 
 ================================================================================
-TODO: Using clause with modifier list
+Using clause with modifier list
 ================================================================================
 
 tell application "System Events"
@@ -283,7 +365,7 @@ end tell
             (property_name (identifier) (identifier))))))))
 
 ================================================================================
-TODO: Using clause with single modifier
+Using clause with single modifier
 ================================================================================
 
 keystroke "v" using command down
