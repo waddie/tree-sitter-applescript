@@ -11,6 +11,7 @@
 enum TokenType {
     METHOD_CALL_LABEL,  // Objective-C style method call: stringWithString:
     PATH_TO_COMMAND,    // "path to" as atomic command
+    HANDLER_LABEL,      // Objective-C style handler label: doJava (when followed by :)
 };
 
 // Parser contexts for state tracking
@@ -142,6 +143,37 @@ static bool scan_method_call_label(Scanner *scanner, TSLexer *lexer) {
     return true;
 }
 
+// Detect Objective-C handler label (identifier:)
+static bool scan_handler_label(Scanner *scanner, TSLexer *lexer) {
+    // Pattern matching: identifier followed by ':'
+    // Used in handler definitions: on doJava:action onType:type
+    // The grammar will enforce that this only appears in handler context
+
+    // Consume identifier
+    if (!is_identifier_start(lexer->lookahead)) {
+        return false;
+    }
+
+    while (is_identifier_char(lexer->lookahead)) {
+        lexer->advance(lexer, false);
+    }
+
+    // Mark end of identifier (before the colon)
+    lexer->mark_end(lexer);
+
+    // Skip whitespace
+    skip_whitespace(lexer);
+
+    // Check for colon
+    if (lexer->lookahead != ':') {
+        return false;
+    }
+
+    // Success - the identifier is a handler label
+    lexer->result_symbol = HANDLER_LABEL;
+    return true;
+}
+
 // Main scanner function
 bool tree_sitter_applescript_external_scanner_scan(
     void *payload,
@@ -165,6 +197,13 @@ bool tree_sitter_applescript_external_scanner_scan(
     // Priority 2: PATH_TO_COMMAND (in expression context)
     if (valid_symbols[PATH_TO_COMMAND]) {
         if (scan_path_to_command(scanner, lexer)) {
+            return true;
+        }
+    }
+
+    // Priority 3: HANDLER_LABEL (in handler definition context)
+    if (valid_symbols[HANDLER_LABEL]) {
+        if (scan_handler_label(scanner, lexer)) {
             return true;
         }
     }

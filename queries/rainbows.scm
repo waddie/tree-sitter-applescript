@@ -19,11 +19,12 @@
 ; Repeat loops
 [
   (repeat_statement)
+  (repeat_forever)
   (repeat_times)
   (repeat_while)
   (repeat_until)
   (repeat_with)
-  (repeat_with_list)
+  (repeat_with_in)
 ] @rainbow.scope
 
 ; Try blocks

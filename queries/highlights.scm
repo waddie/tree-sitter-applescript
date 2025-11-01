@@ -85,6 +85,10 @@
 (labeled_handler
   name: (identifier) @function)
 
+; Script object definitions (like classes)
+(script_statement
+  name: (identifier) @type)
+
 ; Handler end names
 (simple_handler
   end_name: (identifier) @function)
@@ -94,6 +98,16 @@
 
 (labeled_handler
   end_name: (identifier) @function)
+
+; Handler parameters
+(parameter_list
+  (identifier) @variable.parameter)
+
+(direct_parameter
+  parameter: (identifier) @variable.parameter)
+
+(labeled_parameter
+  parameter: (identifier) @variable.parameter)
 
 ; Property names in property statements
 (property_statement
@@ -126,6 +140,7 @@
   (do_javascript)
   (write_text)
   (create_window)
+  (create_tab)
   (path_to_command)
 ] @function.builtin
 

@@ -98,25 +98,29 @@ do shell script "pwd"
       parameter: (string))))
 
 ================================================================================
-TODO: do JavaScript command
+do JavaScript command
 ================================================================================
 
-do JavaScript theCode in document 1
+tell application "Safari"
+    tell front document
+        do JavaScript theCode
+    end tell
+end tell
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (application_command
-    command: (do_javascript)
-    (direct_parameter
-      parameter: (identifier))
-    (command_parameter
-      label: (identifier)
-      value: (expression
-        (element_access
-          element: (property_name (identifier))
-          index: (number (integer))
-          object: (expression (identifier)))))))
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (tell_statement
+      target: (expression
+        (property_name (front_document)))
+      (application_command
+        command: (do_javascript)
+        (direct_parameter
+          parameter: (identifier))))))
 
 ================================================================================
 path to command

@@ -83,7 +83,7 @@ end run
       end_name: (identifier))))
 
 ================================================================================
-TODO: Handler with colon-separated labeled parameters
+Handler with colon-separated labeled parameters
 ================================================================================
 
 on doJava:theAction onType:theType
@@ -97,7 +97,6 @@ end doJava
     (positional_handler
       name: (identifier)
       (labeled_parameter
-        label: (identifier)
         parameter: (identifier))
       (labeled_parameter
         label: (identifier)
@@ -110,7 +109,7 @@ end doJava
       end_name: (identifier))))
 
 ================================================================================
-TODO: Handler with mixed colon and parameter syntax
+Handler with mixed colon and parameter syntax
 ================================================================================
 
 on doAction:action withValue:val
@@ -125,7 +124,6 @@ end doAction
     (positional_handler
       name: (identifier)
       (labeled_parameter
-        label: (identifier)
         parameter: (identifier))
       (labeled_parameter
         label: (identifier)

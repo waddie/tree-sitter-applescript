@@ -8,6 +8,7 @@ module.exports = grammar({
   externals: $ => [
     $.method_call_label,  // Objective-C method call: stringWithString:
     $.path_to_command,    // "path to" as atomic command
+    $.handler_label,      // Objective-C handler label: doJava (when followed by :)
   ],
 
   extras: $ => [
@@ -369,14 +370,27 @@ module.exports = grammar({
       optional(field('end_name', $.identifier)),
     )),
 
-    positional_handler: $ => prec.right(10, seq(
-      'on',
-      field('name', $.identifier),
-      optional($.direct_parameter),
-      repeat($.labeled_parameter),
-      repeat1($._statement),
-      'end',
-      optional(field('end_name', $.identifier)),
+    positional_handler: $ => prec.right(10, choice(
+      // Regular positional handler
+      seq(
+        'on',
+        field('name', $.identifier),
+        optional($.direct_parameter),
+        repeat($.labeled_parameter),
+        repeat1($._statement),
+        'end',
+        optional(field('end_name', $.identifier)),
+      ),
+      // Objective-C style positional handler: on label:param label:param
+      seq(
+        'on',
+        field('name', alias($.handler_label, $.identifier)),
+        alias($.objc_first_parameter, $.labeled_parameter),
+        repeat(alias($.objc_parameter, $.labeled_parameter)),
+        repeat1($._statement),
+        'end',
+        optional(field('end_name', $.identifier)),
+      ),
     )),
 
     labeled_handler: $ => prec.right(10, seq(
@@ -405,7 +419,26 @@ module.exports = grammar({
         ':',
         field('parameter', $.identifier),
       ),
+      // Objective-C style: handler_label appears as identifier in parse tree
+      seq(
+        field('label', alias($.handler_label, $.identifier)),
+        ':',
+        field('parameter', $.identifier),
+      ),
     )),
+
+    // Objective-C style first parameter (label is implicit from handler name)
+    objc_first_parameter: $ => seq(
+      ':',
+      field('parameter', $.identifier),
+    ),
+
+    // Objective-C style subsequent parameters
+    objc_parameter: $ => seq(
+      field('label', alias($.handler_label, $.identifier)),
+      ':',
+      field('parameter', $.identifier),
+    ),
 
     parameter_list: $ => seq(
       $.identifier,
@@ -419,6 +452,7 @@ module.exports = grammar({
     // path_to: Disabled for now due to conflicts with "POSIX path of" expressions
     write_text: $ => token(prec(10, seq('write', /\s+/, 'text'))),
     create_window: $ => token(prec(10, seq('create', /\s+/, 'window'))),
+    create_tab: $ => token(prec(10, seq('create', /\s+/, 'tab'))),
 
     // Known multi-word property names (common Terminal.app and other app properties)
     current_session: $ => token(prec(10, seq('current', /\s+/, 'session'))),
@@ -451,6 +485,7 @@ module.exports = grammar({
           // Note: path_to_command is only used in path_to_expression, not as a command
           $.write_text,
           $.create_window,
+          $.create_tab,
         )),
         optional(repeat1(choice(
           $.direct_parameter,

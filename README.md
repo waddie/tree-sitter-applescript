@@ -2,34 +2,6 @@
 
 Tree-sitter grammar for AppleScript.
 
-## Features
-
-### Core Language
-- **Variables**: `set`, `copy` assignments
-- **Data Types**: Numbers, strings, booleans, `missing value`, lists, records
-- **Control Flow**: `if-then-else`, `repeat` (all variants), `try-on error`
-- **Operators**: Arithmetic, comparison, logical, containment, type casting (`as`)
-- **Comments**: `--`, `#`, `(* *)` with line continuations (`¬`, `\`)
-
-### Application Scripting
-- **Tell blocks**: `tell application "Finder"` with nested commands
-- **Application expressions**: `application "AppName"`
-- **Multi-word commands**: `do shell script`, `system attribute`, `path to`, etc.
-- **Multi-word properties**: `current window`, `front document`, `selected tab`, etc.
-
-### Advanced Features
-- **Handlers**: Simple `on name()`, positional `on name param`, labelled `to name given label:value`
-- **Properties**: `property name : value`
-- **Use statements**: Framework imports, scripting additions, AppleScript version
-- **AppleScriptObjC**: `current application`, Objective-C method calls (`stringWithString:`)
-- **Script objects**: Nested scripts with properties and handlers
-- **Timeout/Transaction blocks**
-
-### External Scanner
-Uses a C-based scanner for context-sensitive patterns:
-- `path to` command recognition
-- Objective-C method call labels (`identifier:`)
-
 ## Installation
 
 ```bash
@@ -57,28 +29,9 @@ tree-sitter test
 tree-sitter parse examples/sample.applescript
 ```
 
-## Known Limitations
-
-**5 unsupported patterns (10% of tests):**
-
-1. **Labelled command parameters** - `do JavaScript code in document 1`
-   - **Workaround**: Use tell blocks (`tell document 1` then `do JavaScript code`)
-
-2. **Objective-C handler syntax** - `on doJava:action onType:type` (2 tests)
-   - **Workaround**: Use traditional labelled parameters
-
-## Development
-
-This grammar uses:
-- **Conflict resolution**: 16 carefully managed conflicts for AppleScript ambiguities
-- **Precedence rules**: Dynamic and static precedence for multi-word patterns
-- **External scanner**: C scanner for context-sensitive tokenization
-- **Comprehensive tests**: 50 test cases covering all major language features
-
 ## Resources
 
 - [AppleScript Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/)
-- [Tree-sitter Documentation](https://tree-sitter.github.io/tree-sitter/)
 
 ## License
 
