@@ -33,7 +33,12 @@ Uses a C-based scanner for context-sensitive patterns:
 ## Installation
 
 ```bash
-npm install tree-sitter-applescript
+# Clone the repository
+git clone https://github.com/waddie/tree-sitter-applescript
+cd tree-sitter-applescript
+
+# Install dependencies
+npm install
 ```
 
 ## Quick Start
