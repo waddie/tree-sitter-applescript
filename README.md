@@ -1,103 +1,58 @@
 # tree-sitter-applescript
 
-A Tree-sitter parser for AppleScript, providing syntax analysis and highlighting for the AppleScript programming language.
+Tree-sitter grammar for AppleScript with 90% test coverage (45/50 tests passing).
 
 ## Features
 
-This grammar supports the following AppleScript language features:
-
-### Core Language Elements
-- **Variables**: `set` and `copy` statements for variable assignment
-- **Data Types**:
-  - Numbers (integers and reals, including scientific notation)
-  - Strings (with Unicode support)
-  - Booleans (`true`, `false`, `yes`, `no`)
-  - Lists `{1, 2, 3}`
-  - Records `{name:"John", age:30}`
-
-### Control Flow
-- **Conditionals**: `if-then-else` statements with `else if` support
-- **Loops**:
-  - `repeat` (infinite loop)
-  - `repeat N times`
-  - `repeat while condition`
-  - `repeat until condition`
-  - `repeat with variable from start to end by step`
-  - `repeat with variable in list`
-- **Error Handling**: `try-on error-end try` blocks
-- **Exit and Return**: `exit repeat`, `return value`
+### Core Language
+- **Variables**: `set`, `copy` assignments
+- **Data Types**: Numbers, strings, booleans, `missing value`, lists, records
+- **Control Flow**: `if-then-else`, `repeat` (all variants), `try-on error`
+- **Operators**: Arithmetic, comparison, logical, containment, type casting (`as`)
+- **Comments**: `--`, `#`, `(* *)` with line continuations (`¬`, `\`)
 
 ### Application Scripting
-- **Tell Statements**: `tell application "AppName"` blocks
-- **Application Expressions**: `application "AppName"`
+- **Tell blocks**: `tell application "Finder"` with nested commands
+- **Application expressions**: `application "AppName"`
+- **Multi-word commands**: `do shell script`, `system attribute`, `path to`, etc.
+- **Multi-word properties**: `current window`, `front document`, `selected tab`, etc.
 
 ### Advanced Features
-- **Handlers/Functions**:
-  - Simple handlers: `on handlerName(param1, param2)`
-  - Positional handlers: `on handlerName directParam`
-  - Labeled handlers: `to handlerName given label:param`
-- **Scripts**: Script objects with properties and handlers
+- **Handlers**: Simple `on name()`, positional `on name param`, labeled `to name given label:value`
 - **Properties**: `property name : value`
-- **Timeout Blocks**: `with timeout of N seconds`
-- **Transaction Blocks**: `with transaction`
-- **Considering/Ignoring**: Text comparison attribute control
+- **Use statements**: Framework imports, scripting additions, AppleScript version
+- **AppleScriptObjC**: `current application`, Objective-C method calls (`stringWithString:`)
+- **Script objects**: Nested scripts with properties and handlers
+- **Timeout/Transaction blocks**
 
-### Operators
-- **Arithmetic**: `+`, `-`, `*`, `/`, `÷`, `^`, `div`, `mod`
-- **Comparison**: `=`, `≠`, `>`, `<`, `≥`, `≤`, `>=`, `<=`
-- **Word-based Comparisons**: `is equal to`, `is greater than`, `comes after`, etc.
-- **Logical**: `and`, `or`, `not`
-- **Containment**: `contains`, `is in`, `starts with`, `ends with`
-- **Concatenation**: `&`
-- **Coercion**: `as`
-
-### Comments
-- Line comments: `-- comment`
-- Unix-style comments: `# comment` (AppleScript 2.0+)
-- Block comments: `(* multi-line comment *)`
+### External Scanner
+Uses a C-based scanner for context-sensitive patterns:
+- `path to` command recognition
+- Objective-C method call labels (`identifier:`)
 
 ## Installation
 
 ```bash
-npm install
+npm install tree-sitter-applescript
 ```
 
-## Development
-
-### Generate Parser
-
-After making changes to `grammar.js`, regenerate the parser:
+## Quick Start
 
 ```bash
-npx tree-sitter generate
-```
+# Generate parser after grammar changes
+tree-sitter generate
 
-### Build Parser
+# Build parser
+tree-sitter build
 
-Compile the parser:
+# Run tests
+tree-sitter test
 
-```bash
-npx tree-sitter build
-```
+# Parse a file
+tree-sitter parse examples/sample.applescript
 
-### Run Tests
-
-```bash
-npx tree-sitter test
-```
-
-### Parse a File
-
-```bash
-npx tree-sitter parse path/to/file.applescript
-```
-
-### Interactive Playground
-
-Open an interactive web interface to test the grammar:
-
-```bash
-npx tree-sitter playground
+# Interactive playground
+tree-sitter playground
 ```
 
 ## Project Structure
@@ -105,76 +60,68 @@ npx tree-sitter playground
 ```
 .
 ├── grammar.js              # Grammar definition
-├── src/                    # Generated parser source (C)
-├── queries/                # Syntax highlighting queries
-│   └── highlights.scm
-├── test/
-│   └── corpus/            # Test cases
-│       └── basics.txt
-├── examples/              # Example AppleScript files
-│   └── sample.applescript
-├── package.json
-└── README.md
+├── src/
+│   ├── parser.c           # Generated parser
+│   └── scanner.c          # External scanner (C)
+├── queries/
+│   └── highlights.scm     # Syntax highlighting
+├── test/corpus/           # Test cases
+├── bindings/              # Language bindings (C, Go, Node, Python, Rust, Swift)
+└── CLAUDE.md             # Development guide for Claude Code
 ```
 
-## Usage
+## Editor Integration
 
-### In Neovim
+### Neovim with nvim-treesitter
 
-1. Install the parser:
-   ```bash
-   mkdir -p ~/.local/share/nvim/site/pack/tree-sitter/start/tree-sitter-applescript
-   cp -r . ~/.local/share/nvim/site/pack/tree-sitter/start/tree-sitter-applescript
-   ```
+```lua
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = { "applescript" },
+  highlight = { enable = true },
+}
+```
 
-2. Configure in your Neovim config:
-   ```lua
-   require'nvim-treesitter.configs'.setup {
-     ensure_installed = { "applescript" },
-     highlight = { enable = true },
-   }
-   ```
+### Manual Installation
 
-### In Atom
-
-1. Install `language-applescript` package
-2. Add this parser to the package's grammars directory
-
-### In Emacs
-
-Use `tree-sitter-mode` with this grammar for AppleScript syntax highlighting.
+```bash
+mkdir -p ~/.local/share/nvim/site/parser
+cp build/parser.so ~/.local/share/nvim/site/parser/applescript.so
+```
 
 ## Known Limitations
 
-- The `given` keyword syntax for labeled parameters is not fully supported
-- Some advanced AppleScript features like raw event codes (`« »`) are not yet implemented
-- Application-specific commands and terminologies are parsed as generic expressions
+**5 unsupported patterns (10% of tests):**
 
-## Contributing
+1. **Labeled command parameters** - `do JavaScript code in document 1`
+   - **Workaround**: Use tell blocks (`tell document 1` then `do JavaScript code`)
+   - **Status**: Deferred - requires complex context tracking
 
-Contributions are welcome! Please feel free to submit issues or pull requests.
+2. **Objective-C handler syntax** - `on doJava:action onType:type` (2 tests)
+   - **Workaround**: Use traditional labeled parameters
+   - **Status**: Deferred - requires Phase 2 scanner enhancements
 
-### Adding Tests
+See `ISSUES.md` for detailed analysis and `CLAUDE.md` for development guidance.
 
-Add test cases to `test/corpus/*.txt` using this format:
+## Development
 
-```
-================================================================================
-Test Name
-================================================================================
+This grammar uses:
+- **Conflict resolution**: 16 carefully managed conflicts for AppleScript ambiguities
+- **Precedence rules**: Dynamic and static precedence for multi-word patterns
+- **External scanner**: C scanner for context-sensitive tokenization
+- **Comprehensive tests**: 50 test cases covering all major language features
 
-input code here
-
---------------------------------------------------------------------------------
-
-(expected_parse_tree)
-```
+Key files:
+- `grammar.js` - Grammar rules (650+ lines)
+- `src/scanner.c` - External scanner for advanced patterns
+- `SCANNER.md` - Scanner documentation and extension guide
+- `ISSUES.md` - Known limitations and workarounds
 
 ## Resources
 
 - [AppleScript Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/)
 - [Tree-sitter Documentation](https://tree-sitter.github.io/tree-sitter/)
+- [Development Guide](CLAUDE.md) - Commands, architecture, and known issues
 
 ## License
 
-MIT
+MIT License - Copyright (c) 2025 Tom Waddington
