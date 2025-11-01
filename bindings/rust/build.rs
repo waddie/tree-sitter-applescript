@@ -1,3 +1,7 @@
+// MIT License
+// Copyright (c) 2025 Tom Waddington
+// See LICENSE file for full license text
+
 fn main() {
     let src_dir = std::path::Path::new("src");
 

@@ -1,3 +1,7 @@
+// MIT License
+// Copyright (c) 2025 Tom Waddington
+// See LICENSE file for full license text
+
 #include "tree_sitter/parser.h"
 #include <node.h>
 #include "nan.h"

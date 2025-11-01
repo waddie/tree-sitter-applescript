@@ -149,3 +149,171 @@ set x to 5
   (set_statement
     target: (expression (identifier))
     value: (expression (number (integer)))))
+
+================================================================================
+Hash comment single line
+================================================================================
+
+# This is a hash comment
+set x to 5
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (comment)
+  (set_statement
+    target: (expression (identifier))
+    value: (expression (number (integer)))))
+
+================================================================================
+Hash comment inline
+================================================================================
+
+set x to 5  # inline comment
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression (number (integer))))
+  (comment))
+
+================================================================================
+missing value property initialization
+================================================================================
+
+property _bundle : missing value
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (property_statement
+    name: (identifier)
+    value: (expression (missing_value))))
+
+================================================================================
+missing value comparison
+================================================================================
+
+if x is missing value then
+    set x to 10
+end if
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    condition: (expression
+      (binary_expression
+        left: (expression (identifier))
+        right: (expression (missing_value))))
+    (set_statement
+      target: (expression (identifier))
+      value: (expression (number (integer))))))
+
+================================================================================
+Line continuation with ¬ character
+================================================================================
+
+set myList to {1, ¬
+    2, 3}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (list
+        (expression (number (integer)))
+        (expression (number (integer)))
+        (expression (number (integer)))))))
+
+================================================================================
+Line continuation with ¬ in property record
+================================================================================
+
+property mods : {¬
+    {name:"cmd", symbol:"⌘", value:1048576}, ¬
+    {name:"opt", symbol:"⌥", value:524288}, ¬
+    {name:"ctrl", symbol:"⌃", value:262144}¬
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (property_statement
+    name: (identifier)
+    value: (expression
+      (list
+        (expression
+          (record
+            (record_entry
+              key: (identifier)
+              value: (expression (string)))
+            (record_entry
+              key: (identifier)
+              value: (expression (string)))
+            (record_entry
+              key: (identifier)
+              value: (expression (number (integer))))))
+        (expression
+          (record
+            (record_entry
+              key: (identifier)
+              value: (expression (string)))
+            (record_entry
+              key: (identifier)
+              value: (expression (string)))
+            (record_entry
+              key: (identifier)
+              value: (expression (number (integer))))))
+        (expression
+          (record
+            (record_entry
+              key: (identifier)
+              value: (expression (string)))
+            (record_entry
+              key: (identifier)
+              value: (expression (string)))
+            (record_entry
+              key: (identifier)
+              value: (expression (number (integer))))))))))
+
+================================================================================
+Complex multi-line record with continuations
+================================================================================
+
+set config to {¬
+    enabled:true, ¬
+    timeout:30, ¬
+    servers:{¬
+        production:"prod.example.com", ¬
+        staging:"stage.example.com"¬
+    }¬
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (record
+        (record_entry
+          key: (identifier)
+          value: (expression (boolean)))
+        (record_entry
+          key: (identifier)
+          value: (expression (number (integer))))
+        (record_entry
+          key: (identifier)
+          value: (expression
+            (record
+              (record_entry
+                key: (identifier)
+                value: (expression (string)))
+              (record_entry
+                key: (identifier)
+                value: (expression (string))))))))))

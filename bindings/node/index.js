@@ -1,3 +1,7 @@
+// MIT License
+// Copyright (c) 2025 Tom Waddington
+// See LICENSE file for full license text
+
 try {
   module.exports = require("../../build/Release/tree_sitter_applescript_binding");
 } catch (error1) {

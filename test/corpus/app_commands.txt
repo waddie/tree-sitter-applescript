@@ -66,3 +66,234 @@ activate window
     command: (identifier)
     (direct_parameter
       parameter: (identifier))))
+
+================================================================================
+TODO: system attribute command
+================================================================================
+
+set bundleId to (system attribute "alfred_workflow_bundleid")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (application_command
+        command: (identifier)
+        (command_parameter
+          label: (identifier)
+          value: (expression (string)))))))
+
+================================================================================
+TODO: do shell script command
+================================================================================
+
+do shell script "pwd"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (application_command
+    command: (identifier)
+    (command_parameter
+      label: (identifier)
+      value: (expression (identifier)))
+    (direct_parameter
+      parameter: (string))))
+
+================================================================================
+TODO: do JavaScript command
+================================================================================
+
+do JavaScript theCode in document 1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (application_command
+    command: (identifier)
+    (command_parameter
+      label: (identifier)
+      value: (expression (identifier)))
+    (command_parameter
+      label: (identifier)
+      value: (expression (identifier)))
+    (direct_parameter
+      parameter: (number))))
+
+================================================================================
+TODO: path to command
+================================================================================
+
+set homePath to path to home folder
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (application_command
+        command: (identifier)
+        (command_parameter
+          label: (identifier)
+          value: (expression (identifier)))
+        (command_parameter
+          label: (identifier)
+          value: (expression (identifier)))))))
+
+================================================================================
+TODO: path to with POSIX path of
+================================================================================
+
+set _home to POSIX path of ((path to home folder) as alias)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (element_access
+        element: (property_name (identifier) (identifier))
+        object: (expression
+          (type_cast
+            value: (expression
+              (application_command
+                command: (identifier)
+                (command_parameter
+                  label: (identifier)
+                  value: (expression (identifier)))
+                (command_parameter
+                  label: (identifier)
+                  value: (expression (identifier)))))
+            type: (identifier)))))))
+
+================================================================================
+TODO: Multi-word property in 'of' expression
+================================================================================
+
+tell current session of current window
+    activate
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (element_access
+        element: (property_name (identifier) (identifier))
+        object: (expression
+          (property_name (identifier) (identifier)))))
+    (expression_statement
+      (expression (identifier)))))
+
+================================================================================
+TODO: Nested multi-word 'of' expressions
+================================================================================
+
+set myTab to current tab of first window
+tell myTab
+    close
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (element_access
+        element: (property_name (identifier) (identifier))
+        object: (expression
+          (element_access
+            element: (property_name (identifier))
+            object: (expression (identifier)))))))
+  (tell_statement
+    target: (expression (identifier))
+    (expression_statement
+      (expression (identifier)))))
+
+================================================================================
+TODO: Multi-word command
+================================================================================
+
+tell application "Terminal"
+    write text "hello world" with newline
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (application_command
+      command: (property_name (identifier) (identifier))
+      (direct_parameter
+        parameter: (string))
+      (with_clause
+        option: (property_name (identifier))))))
+
+================================================================================
+TODO: Multi-word command without parameters
+================================================================================
+
+tell application "Terminal"
+    create window
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (application_command
+      command: (property_name (identifier) (identifier)))))
+
+================================================================================
+TODO: Using clause with modifier list
+================================================================================
+
+tell application "System Events"
+    keystroke "c" using {command down, shift down}
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (application_command
+      command: (identifier)
+      (direct_parameter
+        parameter: (string))
+      (using_clause
+        (list
+          (expression
+            (property_name (identifier) (identifier)))
+          (expression
+            (property_name (identifier) (identifier))))))))
+
+================================================================================
+TODO: Using clause with single modifier
+================================================================================
+
+keystroke "v" using command down
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (application_command
+    command: (identifier)
+    (direct_parameter
+      parameter: (string))
+    (using_clause
+      (property_name (identifier) (identifier)))))

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "applescript",
+      "camelcase": "AppleScript",
+      "title": "AppleScript",
+      "scope": "source.applescript",
+      "file-types": [
+        "applescript",
+        "scpt"
+      ],
+      "injection-regex": "^applescript$",
+      "class-name": "TreeSitterApplescript"
+    }
+  ],
+  "metadata": {
+    "version": "0.0.1",
+    "license": "MIT",
+    "description": "AppleScript grammar for tree-sitter",
+    "authors": [
+      {
+        "name": "Tom Waddington",
+        "email": "tom@waddington.dev"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/waddie/tree-sitter-applescript"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true,
+    "zig": false
+  }
+}

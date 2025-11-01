@@ -1,0 +1,64 @@
+================================================================================
+current application reference
+================================================================================
+
+set ca to current application
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression (current_application))))
+
+================================================================================
+current application property access
+================================================================================
+
+property NSString : a reference to current application's NSString
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (property_statement
+    name: (identifier)
+    value: (expression
+      (reference_expression
+        target: (expression
+          (property_access
+            object: (expression (current_application))
+            property: (property_name (identifier))))))))
+
+================================================================================
+Script reference in property
+================================================================================
+
+property parent : script "BetterTouchTool Library"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (property_statement
+    name: (identifier)
+    value: (expression
+      (script_reference
+        (string)))))
+
+================================================================================
+TODO: current application method call
+================================================================================
+
+set myString to current application's NSString's stringWithString:"hello"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (property_access
+        object: (expression
+          (property_access
+            object: (expression (current_application))
+            property: (property_name (identifier))))
+        property: (property_name (identifier))))))

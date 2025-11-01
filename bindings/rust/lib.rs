@@ -1,3 +1,7 @@
+// MIT License
+// Copyright (c) 2025 Tom Waddington
+// See LICENSE file for full license text
+
 //! This crate provides applescript language support for the [tree-sitter][] parsing library.
 //!
 //! Typically, you will use the [language][language func] function to add this language to a

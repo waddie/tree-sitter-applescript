@@ -1,9 +1,13 @@
+// MIT License
+// Copyright (c) 2025 Tom Waddington
+// See LICENSE file for full license text
+
 module.exports = grammar({
   name: 'applescript',
 
   extras: $ => [
     $.comment,
-    /[\s\f\uFEFF\u2060\u200B]|\\\r?\n/,
+    /[\s\f\uFEFF\u2060\u200B]|\\\r?\n|¬\r?\n/,
   ],
 
   conflicts: $ => [
@@ -305,6 +309,13 @@ module.exports = grammar({
       'use',
       choice(
         seq('scripting', 'additions'),
+        seq('AppleScript', 'version', $.string),
+        seq('framework', $.string),
+        seq(
+          optional(seq(field('alias', $.identifier), ':')),
+          'script',
+          $.string,
+        ),
         seq(
           optional('application'),
           field('name', $.string),
@@ -374,9 +385,16 @@ module.exports = grammar({
 
     direct_parameter: $ => prec(1, field('parameter', $.identifier)),
 
-    labeled_parameter: $ => prec(2, seq(
-      field('label', $.identifier),
-      field('parameter', $.identifier),
+    labeled_parameter: $ => prec(2, choice(
+      seq(
+        field('label', $.identifier),
+        field('parameter', $.identifier),
+      ),
+      seq(
+        field('label', $.identifier),
+        ':',
+        field('parameter', $.identifier),
+      ),
     )),
 
     parameter_list: $ => seq(
@@ -436,6 +454,9 @@ module.exports = grammar({
       $.string,
       $.number,
       $.boolean,
+      $.missing_value,
+      $.current_application,
+      $.script_reference,
       $.reference_expression,
     ),
 
@@ -453,6 +474,7 @@ module.exports = grammar({
           'is less than', 'less than', 'comes before',
           'is greater than or equal to', 'is greater than or equal',
           'is less than or equal to', 'is less than or equal',
+          'is',
         )],
         [prec.left, 5, choice(
           'contains', 'contain', 'does not contain', 'doesn\'t contain',
@@ -537,6 +559,12 @@ module.exports = grammar({
     ),
 
     boolean: $ => choice('true', 'false', 'yes', 'no'),
+
+    missing_value: $ => seq('missing', 'value'),
+
+    current_application: $ => seq('current', 'application'),
+
+    script_reference: $ => seq('script', $.string),
 
     list: $ => seq(
       '{',

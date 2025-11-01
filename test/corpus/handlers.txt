@@ -35,3 +35,107 @@ end run
         target: (expression (identifier))
         value: (expression (number (integer))))
       end_name: (identifier))))
+
+================================================================================
+Handler returning missing value
+================================================================================
+
+on getValue()
+    return missing value
+end getValue
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (handler_definition
+    (simple_handler
+      name: (identifier)
+      (return_statement
+        value: (expression (missing_value)))
+      end_name: (identifier))))
+
+================================================================================
+on run with argv parameter
+================================================================================
+
+on run argv
+    repeat with arg in argv
+        log arg
+    end repeat
+end run
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (handler_definition
+    (positional_handler
+      name: (identifier)
+      (direct_parameter
+        parameter: (identifier))
+      (repeat_statement
+        (repeat_with_in
+          variable: (identifier)
+          list: (expression (identifier))
+          (application_command
+            command: (identifier)
+            (direct_parameter
+              parameter: (identifier)))))
+      end_name: (identifier))))
+
+================================================================================
+TODO: Handler with colon-separated labeled parameters
+================================================================================
+
+on doJava:theAction onType:theType
+    return theAction & theType
+end doJava
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (handler_definition
+    (positional_handler
+      name: (identifier)
+      (labeled_parameter
+        label: (identifier)
+        parameter: (identifier))
+      (labeled_parameter
+        label: (identifier)
+        parameter: (identifier))
+      (return_statement
+        value: (expression
+          (binary_expression
+            left: (expression (identifier))
+            right: (expression (identifier)))))
+      end_name: (identifier))))
+
+================================================================================
+TODO: Handler with mixed colon and parameter syntax
+================================================================================
+
+on doAction:action withValue:val
+    log action
+    log val
+end doAction
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (handler_definition
+    (positional_handler
+      name: (identifier)
+      (labeled_parameter
+        label: (identifier)
+        parameter: (identifier))
+      (labeled_parameter
+        label: (identifier)
+        parameter: (identifier))
+      (application_command
+        command: (identifier)
+        (direct_parameter
+          parameter: (identifier)))
+      (application_command
+        command: (identifier)
+        (direct_parameter
+          parameter: (identifier)))
+      end_name: (identifier))))

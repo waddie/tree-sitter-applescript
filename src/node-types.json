@@ -184,6 +184,10 @@
             "named": false
           },
           {
+            "type": "is",
+            "named": false
+          },
+          {
             "type": "is contained by",
             "named": false
           },
@@ -339,6 +343,7 @@
   {
     "type": "comment",
     "named": true,
+    "extra": true,
     "fields": {}
   },
   {
@@ -439,6 +444,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "current_application",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "direct_parameter",
@@ -751,6 +761,10 @@
           "named": true
         },
         {
+          "type": "current_application",
+          "named": true
+        },
+        {
           "type": "element_access",
           "named": true
         },
@@ -760,6 +774,10 @@
         },
         {
           "type": "list",
+          "named": true
+        },
+        {
+          "type": "missing_value",
           "named": true
         },
         {
@@ -780,6 +798,10 @@
         },
         {
           "type": "reference_expression",
+          "named": true
+        },
+        {
+          "type": "script_reference",
           "named": true
         },
         {
@@ -1153,6 +1175,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "missing_value",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "number",
@@ -2163,6 +2190,21 @@
     }
   },
   {
+    "type": "script_reference",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "script_statement",
     "named": true,
     "fields": {
@@ -2385,6 +2427,7 @@
   {
     "type": "source_file",
     "named": true,
+    "root": true,
     "fields": {},
     "children": {
       "multiple": true,
@@ -2897,6 +2940,16 @@
     "type": "use_statement",
     "named": true,
     "fields": {
+      "alias": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": false,
@@ -2917,6 +2970,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -3032,6 +3095,10 @@
     "named": false
   },
   {
+    "type": "AppleScript",
+    "named": false
+  },
+  {
     "type": "^",
     "named": false
   },
@@ -3100,6 +3167,10 @@
     "named": false
   },
   {
+    "type": "current",
+    "named": false
+  },
+  {
     "type": "diacriticals",
     "named": false
   },
@@ -3156,6 +3227,10 @@
     "named": false
   },
   {
+    "type": "framework",
+    "named": false
+  },
+  {
     "type": "from",
     "named": false
   },
@@ -3182,6 +3257,10 @@
   {
     "type": "integer",
     "named": true
+  },
+  {
+    "type": "is",
+    "named": false
   },
   {
     "type": "is contained by",
@@ -3253,6 +3332,10 @@
   },
   {
     "type": "less than",
+    "named": false
+  },
+  {
+    "type": "missing",
     "named": false
   },
   {
@@ -3381,6 +3464,10 @@
   },
   {
     "type": "use",
+    "named": false
+  },
+  {
+    "type": "value",
     "named": false
   },
   {
