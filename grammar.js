@@ -16,42 +16,35 @@ module.exports = grammar({
   ],
 
   conflicts: $ => [
+    // Repeat statements vs expression statements
     [$.repeat_times, $.expression_statement],
-    [$.repeat_until, $.expression_statement],
-    [$.repeat_while, $.expression_statement],
-    [$.repeat_with, $.expression_statement],
-    [$.repeat_with_in, $.expression_statement],
     [$.transaction_statement, $.expression_statement],
+
+    // Application command ambiguities
     [$.application_command, $.expression_statement],
     [$.application_command, $.command_parameter],
-    [$.application_command],
-    [$.application_command, $.expression],
     [$.application_command, $.property_name, $.expression],
+    [$.application_command, $.property_name],
+
+    // List vs record (both start with '{')
     [$.list, $.record],
-    [$.simple_handler, $.positional_handler],
-    [$.positional_handler, $.labeled_handler],
-    [$.direct_parameter, $.labeled_parameter, $.expression],
-    [$.direct_parameter, $.application_command, $.expression],
+
+    // Parameter and expression ambiguities
     [$.direct_parameter, $.labeled_parameter, $.application_command, $.property_name, $.expression],
-    [$.direct_parameter, $.application_command, $.property_name, $.expression],
-    [$.labeled_parameter, $.application_command, $.property_name, $.expression],
-    [$.command_parameter, $.expression],
+    [$.direct_parameter, $.application_command, $.command_parameter, $.property_name, $.expression],
     [$.command_parameter, $.property_name, $.expression],
-    [$.parameter_list, $.expression],
-    [$.script_statement],
-    [$.if_statement],
-    [$.if_statement, $.else_if_clause],
-    [$.on_error_clause, $.expression],
+    [$.parameter_list, $.property_name, $.expression],
+
+    // Property name vs expression
     [$.property_name, $.expression],
     [$.property_name],
-    [$.direct_parameter, $.labeled_parameter, $.property_name, $.expression],
+
+    // Error handling
     [$.on_error_clause, $.property_name, $.expression],
-    [$.application_command, $.property_name],
-    [$.direct_parameter, $.application_command, $.command_parameter, $.property_name, $.expression],
-    [$.parameter_list, $.property_name, $.expression],
-    [$.expression],
-    [$.direct_parameter, $.command_parameter, $.property_name, $.expression, $.element_access],
-    [$._statement, $.expression],  // application_command in both statement and expression contexts
+
+    // If statement
+    [$.if_statement],
+    [$.if_statement, $.else_if_clause],
   ],
 
   rules: {

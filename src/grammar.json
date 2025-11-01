@@ -4136,22 +4136,6 @@
       "expression_statement"
     ],
     [
-      "repeat_until",
-      "expression_statement"
-    ],
-    [
-      "repeat_while",
-      "expression_statement"
-    ],
-    [
-      "repeat_with",
-      "expression_statement"
-    ],
-    [
-      "repeat_with_in",
-      "expression_statement"
-    ],
-    [
       "transaction_statement",
       "expression_statement"
     ],
@@ -4164,40 +4148,19 @@
       "command_parameter"
     ],
     [
-      "application_command"
-    ],
-    [
-      "application_command",
-      "expression"
-    ],
-    [
       "application_command",
       "property_name",
       "expression"
+    ],
+    [
+      "application_command",
+      "property_name"
     ],
     [
       "list",
       "record"
     ],
     [
-      "simple_handler",
-      "positional_handler"
-    ],
-    [
-      "positional_handler",
-      "labeled_handler"
-    ],
-    [
-      "direct_parameter",
-      "labeled_parameter",
-      "expression"
-    ],
-    [
-      "direct_parameter",
-      "application_command",
-      "expression"
-    ],
-    [
       "direct_parameter",
       "labeled_parameter",
       "application_command",
@@ -4207,17 +4170,8 @@
     [
       "direct_parameter",
       "application_command",
-      "property_name",
-      "expression"
-    ],
-    [
-      "labeled_parameter",
-      "application_command",
-      "property_name",
-      "expression"
-    ],
-    [
       "command_parameter",
+      "property_name",
       "expression"
     ],
     [
@@ -4227,10 +4181,20 @@
     ],
     [
       "parameter_list",
+      "property_name",
       "expression"
     ],
     [
-      "script_statement"
+      "property_name",
+      "expression"
+    ],
+    [
+      "property_name"
+    ],
+    [
+      "on_error_clause",
+      "property_name",
+      "expression"
     ],
     [
       "if_statement"
@@ -4238,58 +4202,6 @@
     [
       "if_statement",
       "else_if_clause"
-    ],
-    [
-      "on_error_clause",
-      "expression"
-    ],
-    [
-      "property_name",
-      "expression"
-    ],
-    [
-      "property_name"
-    ],
-    [
-      "direct_parameter",
-      "labeled_parameter",
-      "property_name",
-      "expression"
-    ],
-    [
-      "on_error_clause",
-      "property_name",
-      "expression"
-    ],
-    [
-      "application_command",
-      "property_name"
-    ],
-    [
-      "direct_parameter",
-      "application_command",
-      "command_parameter",
-      "property_name",
-      "expression"
-    ],
-    [
-      "parameter_list",
-      "property_name",
-      "expression"
-    ],
-    [
-      "expression"
-    ],
-    [
-      "direct_parameter",
-      "command_parameter",
-      "property_name",
-      "expression",
-      "element_access"
-    ],
-    [
-      "_statement",
-      "expression"
     ]
   ],
   "precedences": [],

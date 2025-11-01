@@ -11,7 +11,10 @@
         "scpt"
       ],
       "injection-regex": "^applescript$",
-      "class-name": "TreeSitterApplescript"
+      "class-name": "TreeSitterApplescript",
+      "highlights": [
+        "queries/highlights.scm"
+      ]
     }
   ],
   "metadata": {

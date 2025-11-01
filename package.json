@@ -22,7 +22,8 @@
       "file-types": [
         "applescript",
         "scpt"
-      ]
+      ],
+      "highlights": "queries/highlights.scm"
     }
   ]
 }

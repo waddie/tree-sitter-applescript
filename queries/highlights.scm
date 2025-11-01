@@ -23,6 +23,7 @@
   "considering"
   "ignoring"
   "with"
+  "without"
   "timeout"
   "transaction"
   "of"
@@ -40,7 +41,7 @@
   "as"
 ] @keyword
 
-; Control flow
+; Control flow keywords
 [
   "if"
   "then"
@@ -48,10 +49,18 @@
   "repeat"
   "exit"
   "return"
+  "try"
+  "error"
 ] @keyword.control
 
 ; Boolean literals
 (boolean) @constant.builtin.boolean
+
+; Special constants
+(missing_value) @constant.builtin
+
+; Current application (special constant)
+(current_application) @constant.builtin
 
 ; Numbers
 (integer) @constant.numeric.integer
@@ -76,7 +85,17 @@
 (labeled_handler
   name: (identifier) @function)
 
-; Property names
+; Handler end names
+(simple_handler
+  end_name: (identifier) @function)
+
+(positional_handler
+  end_name: (identifier) @function)
+
+(labeled_handler
+  end_name: (identifier) @function)
+
+; Property names in property statements
 (property_statement
   name: (identifier) @property)
 
@@ -87,6 +106,49 @@
 ; Application names
 (application_expression
   name: (string) @string.special)
+
+; Script references
+(script_reference
+  (string) @string.special)
+
+; Type casts
+(type_cast
+  type: (identifier) @type)
+
+; Method calls (Objective-C bridge)
+(method_call
+  method: (method_call_label) @function.method)
+
+; Built-in multi-word commands
+[
+  (system_attribute)
+  (do_shell_script)
+  (do_javascript)
+  (write_text)
+  (create_window)
+  (path_to_command)
+] @function.builtin
+
+; Multi-word property names (Terminal.app, System Events, etc.)
+[
+  (current_session)
+  (current_window)
+  (current_tab)
+  (first_window)
+  (first_process)
+  (first_button)
+  (first_document)
+  (first_item)
+  (front_document)
+  (front_window)
+  (selected_tab)
+  (selected_window)
+  (every_item)
+  (every_window)
+  (scroll_area)
+  (radio_group)
+  (radio_button)
+] @variable.builtin
 
 ; Operators
 [
@@ -130,6 +192,7 @@
   "is greater than or equal"
   "is less than or equal to"
   "is less than or equal"
+  "is"
   "contains"
   "contain"
   "does not contain"
@@ -153,8 +216,19 @@
   "{"
   "}"
   ","
-  ":"
 ] @punctuation.delimiter
+
+; Colon in records and labeled parameters
+":" @punctuation.delimiter
 
 ; Property access
 "'s" @punctuation.special
+
+; Application command highlighting
+(application_command
+  command: (identifier) @function.call)
+
+; Tell statement targets
+(tell_statement
+  target: (expression
+    (identifier) @variable.builtin))
