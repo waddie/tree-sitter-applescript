@@ -18,7 +18,7 @@ Tree-sitter grammar for AppleScript.
 - **Multi-word properties**: `current window`, `front document`, `selected tab`, etc.
 
 ### Advanced Features
-- **Handlers**: Simple `on name()`, positional `on name param`, labeled `to name given label:value`
+- **Handlers**: Simple `on name()`, positional `on name param`, labelled `to name given label:value`
 - **Properties**: `property name : value`
 - **Use statements**: Framework imports, scripting additions, AppleScript version
 - **AppleScriptObjC**: `current application`, Objective-C method calls (`stringWithString:`)
@@ -61,15 +61,11 @@ tree-sitter parse examples/sample.applescript
 
 **5 unsupported patterns (10% of tests):**
 
-1. **Labeled command parameters** - `do JavaScript code in document 1`
+1. **Labelled command parameters** - `do JavaScript code in document 1`
    - **Workaround**: Use tell blocks (`tell document 1` then `do JavaScript code`)
-   - **Status**: Deferred - requires complex context tracking
 
 2. **Objective-C handler syntax** - `on doJava:action onType:type` (2 tests)
-   - **Workaround**: Use traditional labeled parameters
-   - **Status**: Deferred - requires Phase 2 scanner enhancements
-
-See `ISSUES.md` for detailed analysis and `CLAUDE.md` for development guidance.
+   - **Workaround**: Use traditional labelled parameters
 
 ## Development
 
