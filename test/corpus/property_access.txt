@@ -1,0 +1,170 @@
+================================================================================
+Multi-word property source text
+================================================================================
+
+tell application "Script Debugger"
+	tell front document
+		set txt to source text
+	end tell
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (tell_statement
+      target: (expression
+        (property_name
+          (front_document)))
+      (set_statement
+        target: (expression (identifier))
+        value: (expression
+          (property_name
+            (identifier)
+            (identifier)))))))
+
+================================================================================
+Multi-word property script library files
+================================================================================
+
+tell application "Script Debugger"
+	tell front document
+		set libs to used script library files
+	end tell
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (tell_statement
+      target: (expression
+        (property_name
+          (front_document)))
+      (set_statement
+        target: (expression (identifier))
+        value: (expression
+          (property_name
+            (identifier)
+            (identifier)
+            (identifier)
+            (identifier)))))))
+
+================================================================================
+Set property by index
+================================================================================
+
+set myList to {1, 2, 3}
+set myList's item 2 to 99
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (list
+        (expression (number (integer)))
+        (expression (number (integer)))
+        (expression (number (integer))))))
+  (set_statement
+    target: (expression
+      (element_access
+        element: (property_name (identifier))
+        index: (number (integer))
+        object: (expression (identifier))))
+    value: (expression (number (integer)))))
+
+================================================================================
+Property access with possessive and index
+================================================================================
+
+set data to {10, 20, 30, 40}
+set data's item 3 to data's item 1 + data's item 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (list
+        (expression (number (integer)))
+        (expression (number (integer)))
+        (expression (number (integer)))
+        (expression (number (integer))))))
+  (set_statement
+    target: (expression
+      (element_access
+        element: (property_name (identifier))
+        index: (number (integer))
+        object: (expression (identifier))))
+    value: (expression
+      (binary_expression
+        left: (expression
+          (element_access
+            element: (property_name (identifier))
+            index: (number (integer))
+            object: (expression (identifier))))
+        right: (expression
+          (element_access
+            element: (property_name (identifier))
+            index: (number (integer))
+            object: (expression (identifier))))))))
+
+================================================================================
+Quoted form of path
+================================================================================
+
+set thePath to "/Users/test/file.txt"
+set cmd to "ls " & quoted form of thePath
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression (string)))
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (binary_expression
+        left: (expression (string))
+        right: (expression
+          (element_access
+            element: (property_name
+              (identifier)
+              (identifier))
+            object: (expression (identifier))))))))
+
+================================================================================
+Multi-word property line endings
+================================================================================
+
+tell application "Script Debugger"
+	set endings to line endings of front document
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (set_statement
+      target: (expression (identifier))
+      value: (expression
+        (element_access
+          element: (property_name
+            (identifier)
+            (identifier))
+          object: (expression
+            (property_name
+              (front_document))))))))

@@ -1,0 +1,231 @@
+================================================================================
+Close command with saving parameter
+================================================================================
+
+tell application "TextEdit"
+	close every document with saving
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (application_command
+      command: (identifier)
+      (direct_parameter
+        parameter: (identifier))
+      (with_clause
+        option: (property_name (identifier))))))
+
+================================================================================
+Close command without saving parameter
+================================================================================
+
+tell application "TextEdit"
+	close every document without saving
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (application_command
+      command: (identifier)
+      (direct_parameter
+        parameter: (identifier))
+      (without_clause
+        option: (property_name (identifier))))))
+
+================================================================================
+Save with multiple labeled parameters
+================================================================================
+
+tell application "Script Debugger"
+	tell front document
+		save in theFile as text script line endings Unix endings
+	end tell
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (tell_statement
+      target: (expression
+        (property_name
+          (front_document)))
+      (application_command
+        command: (identifier)
+        (labeled_parameter
+          label: (identifier)
+          parameter: (identifier))
+        (labeled_parameter
+          label: (identifier)
+          parameter: (identifier))
+        (labeled_parameter
+          label: (identifier)
+          parameter: (identifier))
+        (labeled_parameter
+          label: (identifier)
+          parameter: (identifier))))))
+
+================================================================================
+Click at location
+================================================================================
+
+tell application "System Events"
+	click at {100, 200}
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (application_command
+      command: (identifier)
+      (labeled_parameter
+        label: (identifier)
+        parameter: (expression
+          (list
+            (expression (number (integer)))
+            (expression (number (integer)))))))))
+
+================================================================================
+Choose file with prompt
+================================================================================
+
+set theFile to choose file with prompt "Select a file"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (application_command
+        command: (identifier)
+        (direct_parameter
+          parameter: (identifier))
+        (with_clause
+          option: (property_name (identifier))
+          value: (expression (string)))))))
+
+================================================================================
+Choose file name with default name
+================================================================================
+
+set thePath to choose file name with prompt "Enter name" default name "Untitled.txt"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (application_command
+        command: (identifier)
+        (direct_parameter
+          parameter: (identifier))
+        (with_clause
+          option: (property_name (identifier))
+          value: (expression (string)))
+        (labeled_parameter
+          label: (identifier)
+          parameter: (identifier))
+        (labeled_parameter
+          label: (identifier)
+          parameter: (expression (string)))))))
+
+================================================================================
+Save as with line endings
+================================================================================
+
+tell application "Script Debugger"
+	tell front document
+		save as text script line endings Unix endings
+	end tell
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (tell_statement
+      target: (expression
+        (property_name
+          (front_document)))
+      (application_command
+        command: (identifier)
+        (labeled_parameter
+          label: (identifier)
+          parameter: (identifier))
+        (labeled_parameter
+          label: (identifier)
+          parameter: (identifier))
+        (labeled_parameter
+          label: (identifier)
+          parameter: (identifier))))))
+
+================================================================================
+Open location command
+================================================================================
+
+tell application "Safari"
+	open location "https://example.com"
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (application_command
+      command: (identifier)
+      (direct_parameter
+        parameter: (identifier))
+      (direct_parameter
+        parameter: (expression (string))))))
+
+================================================================================
+Keystroke with using modifiers
+================================================================================
+
+tell application "System Events"
+	keystroke "c" using {command down}
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (application_command
+      command: (identifier)
+      (direct_parameter
+        parameter: (expression (string)))
+      (using_clause
+        modifiers: (expression
+          (list
+            (expression
+              (property_name
+                (identifier)
+                (identifier)))))))))

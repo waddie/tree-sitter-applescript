@@ -1,0 +1,124 @@
+================================================================================
+Record with colon syntax
+================================================================================
+
+set props to {name:"Test", value:42}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (record
+        (record_entry
+          key: (identifier)
+          value: (expression (string)))
+        (record_entry
+          key: (identifier)
+          value: (expression (number (integer))))))))
+
+================================================================================
+Record with mixed types
+================================================================================
+
+set data to {title:"Hello", count:5, active:true}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (record
+        (record_entry
+          key: (identifier)
+          value: (expression (string)))
+        (record_entry
+          key: (identifier)
+          value: (expression (number (integer))))
+        (record_entry
+          key: (identifier)
+          value: (expression (boolean)))))))
+
+================================================================================
+Make with properties record
+================================================================================
+
+tell application "Finder"
+	make new folder with properties {name:"NewFolder"}
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (application_command
+      command: (identifier)
+      (direct_parameter
+        parameter: (identifier))
+      (with_clause
+        option: (property_name (identifier))
+        value: (expression
+          (record
+            (record_entry
+              key: (identifier)
+              value: (expression (string)))))))))
+
+================================================================================
+Record with multi-word keys
+================================================================================
+
+set info to {source text:"code", line endings:"Unix"}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (record
+        (record_entry
+          key: (property_name
+            (identifier)
+            (identifier))
+          value: (expression (string)))
+        (record_entry
+          key: (property_name
+            (identifier)
+            (identifier))
+          value: (expression (string)))))))
+
+================================================================================
+Nested records
+================================================================================
+
+set config to {user:{name:"Alice", age:30}, settings:{theme:"dark"}}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (record
+        (record_entry
+          key: (identifier)
+          value: (expression
+            (record
+              (record_entry
+                key: (identifier)
+                value: (expression (string)))
+              (record_entry
+                key: (identifier)
+                value: (expression (number (integer)))))))
+        (record_entry
+          key: (identifier)
+          value: (expression
+            (record
+              (record_entry
+                key: (identifier)
+                value: (expression (string))))))))))

@@ -1,0 +1,195 @@
+================================================================================
+Handler call with multiple parameters
+================================================================================
+
+on myHandler(a, b, c)
+	return a & b & c
+end myHandler
+
+set result to myHandler("x", "y", "z")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (handler_definition
+    (simple_handler
+      name: (identifier)
+      (parameter_list
+        (identifier)
+        (identifier)
+        (identifier))
+      (return_statement
+        value: (expression
+          (binary_expression
+            left: (expression
+              (binary_expression
+                left: (expression (identifier))
+                right: (expression (identifier))))
+            right: (expression (identifier)))))
+      end_name: (identifier)))
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (handler_call
+        name: (identifier)
+        (argument_list
+          (expression (string))
+          (expression (string))
+          (expression (string)))))))
+
+================================================================================
+Nested handler calls
+================================================================================
+
+on outer(x)
+	return x * 2
+end outer
+
+on inner(y)
+	return y + 1
+end inner
+
+set result to outer(inner(5))
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (handler_definition
+    (simple_handler
+      name: (identifier)
+      (parameter_list (identifier))
+      (return_statement
+        value: (expression
+          (binary_expression
+            left: (expression (identifier))
+            right: (expression (number (integer))))))
+      end_name: (identifier)))
+  (handler_definition
+    (simple_handler
+      name: (identifier)
+      (parameter_list (identifier))
+      (return_statement
+        value: (expression
+          (binary_expression
+            left: (expression (identifier))
+            right: (expression (number (integer))))))
+      end_name: (identifier)))
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (handler_call
+        name: (identifier)
+        (argument_list
+          (expression
+            (handler_call
+              name: (identifier)
+              (argument_list
+                (expression (number (integer)))))))))))
+
+================================================================================
+Property access handler call
+================================================================================
+
+use kl : script "Library"
+
+on processText(txt)
+	return kl's trim(txt)
+end processText
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_statement
+    alias: (identifier)
+    (string))
+  (handler_definition
+    (simple_handler
+      name: (identifier)
+      (parameter_list (identifier))
+      (return_statement
+        value: (expression
+          (handler_call
+            object: (expression (identifier))
+            name: (identifier)
+            (argument_list
+              (expression (identifier))))))
+      end_name: (identifier))))
+
+================================================================================
+Handler call with binary expression arguments
+================================================================================
+
+on combine(a, b)
+	return a & b
+end combine
+
+set x to 5
+set y to 10
+set result to combine(x + 1, y * 2)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (handler_definition
+    (simple_handler
+      name: (identifier)
+      (parameter_list
+        (identifier)
+        (identifier))
+      (return_statement
+        value: (expression
+          (binary_expression
+            left: (expression (identifier))
+            right: (expression (identifier)))))
+      end_name: (identifier)))
+  (set_statement
+    target: (expression (identifier))
+    value: (expression (number (integer))))
+  (set_statement
+    target: (expression (identifier))
+    value: (expression (number (integer))))
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (handler_call
+        name: (identifier)
+        (argument_list
+          (expression
+            (binary_expression
+              left: (expression (identifier))
+              right: (expression (number (integer)))))
+          (expression
+            (binary_expression
+              left: (expression (identifier))
+              right: (expression (number (integer))))))))))
+
+================================================================================
+Script object handler call
+================================================================================
+
+use kl : script "Library"
+
+set cleaned to kl's split(kl's extractBetween(text, "(", ")"), ",")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_statement
+    alias: (identifier)
+    (string))
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (handler_call
+        object: (expression (identifier))
+        name: (identifier)
+        (argument_list
+          (expression
+            (handler_call
+              object: (expression (identifier))
+              name: (identifier)
+              (argument_list
+                (expression (identifier))
+                (expression (string))
+                (expression (string)))))
+          (expression (string)))))))

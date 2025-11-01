@@ -9,4 +9,7 @@ additional_examples/*
 bin
 build
 node_modules
+progress-docs
 progress-docs/*
+errors
+errors/*

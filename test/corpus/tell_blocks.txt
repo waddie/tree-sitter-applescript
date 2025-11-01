@@ -1,0 +1,103 @@
+================================================================================
+Nested tell with front document
+================================================================================
+
+tell application "Script Debugger"
+	tell front document
+		set x to name
+	end tell
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (tell_statement
+      target: (expression
+        (property_name
+          (front_document)))
+      (set_statement
+        target: (expression (identifier))
+        value: (expression (identifier))))))
+
+================================================================================
+Nested tell with object reference
+================================================================================
+
+tell application "Finder"
+	tell window 1
+		set bounds to {0, 0, 800, 600}
+	end tell
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (tell_statement
+      target: (expression
+        (element_access
+          element: (property_name (identifier))
+          index: (number (integer))))
+      (set_statement
+        target: (expression (identifier))
+        value: (expression
+          (list
+            (expression (number (integer)))
+            (expression (number (integer)))
+            (expression (number (integer)))
+            (expression (number (integer)))))))))
+
+================================================================================
+Tell application with variable
+================================================================================
+
+set appName to "Finder"
+tell application appName
+	activate
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression (string)))
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (expression (identifier))))
+    (expression_statement
+      (expression (identifier)))))
+
+================================================================================
+Nested tell with process reference
+================================================================================
+
+tell application "System Events"
+	tell process "Finder"
+		set visible to false
+	end tell
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (tell_statement
+      target: (expression
+        (element_access
+          element: (property_name (identifier))
+          object: (expression (string))))
+      (set_statement
+        target: (expression (identifier))
+        value: (expression (boolean))))))
