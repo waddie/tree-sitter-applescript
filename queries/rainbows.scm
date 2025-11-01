@@ -1,70 +1,53 @@
-; Rainbow bracket pairs for delimiter matching
+; Rainbow scopes and brackets for delimiter matching
 
-; Parentheses (used in function calls, parameter lists, grouping)
+; Handler blocks
 [
-  "("
-  ")"
-] @rainbow.bracket
+  (simple_handler)
+  (positional_handler)
+  (labeled_handler)
+] @rainbow.scope
 
-; Braces (used in lists and records)
+; Script blocks
+(script_statement) @rainbow.scope
+
+; Tell blocks
+(tell_statement) @rainbow.scope
+
+; If statements
+(if_statement) @rainbow.scope
+
+; Repeat loops
 [
-  "{"
-  "}"
-] @rainbow.bracket
+  (repeat_statement)
+  (repeat_times)
+  (repeat_while)
+  (repeat_until)
+  (repeat_with)
+  (repeat_with_list)
+] @rainbow.scope
 
-; Handler blocks (on/to...end)
-(simple_handler
-  "on" @rainbow.keyword.begin
-  "end" @rainbow.keyword.end)
-
-(positional_handler
-  "on" @rainbow.keyword.begin
-  "end" @rainbow.keyword.end)
-
-(labeled_handler
-  "to" @rainbow.keyword.begin
-  "end" @rainbow.keyword.end)
-
-; Script blocks (script...end)
-(script_statement
-  "script" @rainbow.keyword.begin
-  "end" @rainbow.keyword.end)
-
-; Tell blocks (tell...end)
-(tell_statement
-  "tell" @rainbow.keyword.begin
-  "end" @rainbow.keyword.end)
-
-; If blocks (if...end)
-(if_statement
-  "if" @rainbow.keyword.begin
-  "end" @rainbow.keyword.end)
-
-; Repeat blocks (repeat...end)
-(repeat_statement
-  "repeat" @rainbow.keyword.begin
-  "end" @rainbow.keyword.end)
-
-; Try blocks (try...end)
-(try_statement
-  "try" @rainbow.keyword.begin
-  "end" @rainbow.keyword.end)
+; Try blocks
+(try_statement) @rainbow.scope
 
 ; Considering/Ignoring blocks
-(considering_statement
-  "considering" @rainbow.keyword.begin
-  "end" @rainbow.keyword.end)
-
-(ignoring_statement
-  "ignoring" @rainbow.keyword.begin
-  "end" @rainbow.keyword.end)
+(considering_statement) @rainbow.scope
+(ignoring_statement) @rainbow.scope
 
 ; Timeout blocks
-(timeout_statement
-  "timeout" @rainbow.keyword.begin
-  "end" @rainbow.keyword.end)
+(timeout_statement) @rainbow.scope
 
 ; Transaction blocks
-(transaction_statement
-  "transaction" @rainbow.keyword.begin
-  "end" @rainbow.keyword.end)
+(transaction_statement) @rainbow.scope
+
+; Lists and records
+(list) @rainbow.scope
+(record) @rainbow.scope
+
+; Parameter lists
+(parameter_list) @rainbow.scope
+
+; Brackets
+[
+  "(" ")"
+  "{" "}"
+] @rainbow.bracket
