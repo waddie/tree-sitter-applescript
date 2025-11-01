@@ -20,6 +20,10 @@
 (application_command
   command: (identifier) @name) @reference.call
 
+; Handler calls
+(handler_call
+  name: (identifier) @name) @reference.call
+
 ; Method calls (Objective-C bridge)
 (method_call
   method: (method_call_label) @name) @reference.call

@@ -23,22 +23,44 @@ module.exports = grammar({
 
     // Application command ambiguities
     [$.application_command, $.expression_statement],
-    [$.application_command, $.command_parameter],
-    [$.application_command, $.property_name, $.expression],
-    [$.application_command, $.property_name],
+    [$.application_command],
 
     // List vs record (both start with '{')
     [$.list, $.record],
 
     // Parameter and expression ambiguities
-    [$.direct_parameter, $.labeled_parameter, $.application_command, $.property_name, $.expression],
-    [$.direct_parameter, $.application_command, $.command_parameter, $.property_name, $.expression],
-    [$.command_parameter, $.property_name, $.expression],
+    [$.direct_parameter, $.labeled_parameter, $.application_command, $.command_parameter, $.property_name, $.expression, $._identifier_or_keyword_token],
+    [$.direct_parameter, $.labeled_parameter, $.application_command, $.command_parameter, $.property_name, $.expression],
+    [$.direct_parameter, $.labeled_parameter, $.command_parameter, $.property_name, $.expression],
     [$.parameter_list, $.property_name, $.expression],
+
+    // Handler call ambiguities (only for contexts with parentheses)
+    [$.direct_parameter, $.labeled_parameter, $.command_parameter, $.property_name, $.expression, $.handler_call],
+    [$.direct_parameter, $.labeled_parameter, $.application_command, $.command_parameter, $.property_name, $.expression, $.handler_call],
+    [$.handler_call, $.application_command, $.direct_parameter, $.labeled_parameter, $.command_parameter, $.property_name, $.expression],
+    [$.argument_list, $.parenthesized_expression],
+
+    // With/using clause ambiguities (optional value)
+    [$.with_clause],
+    [$.using_clause, $.expression],
+
+    // Element vs property access (both use 's syntax)
+    [$.element_access, $.property_access],
 
     // Property name vs expression
     [$.property_name, $.expression],
     [$.property_name],
+    [$.property_name, $._identifier_or_keyword_token, $.expression],
+    [$.property_name, $._identifier_or_keyword_token],
+
+    // Property names containing keywords
+    [$._identifier_or_keyword_token, $.script_statement],
+
+    // Additional parameter ambiguities (for system_attribute and other commands)
+    [$.direct_parameter, $.labeled_parameter, $.command_parameter, $.property_name, $._identifier_or_keyword_token, $.expression],
+
+    // Record multi-word key ambiguities
+    [$.property_name, $.record_entry],
 
     // Error handling
     [$.on_error_clause, $.property_name, $.expression],
@@ -407,23 +429,24 @@ module.exports = grammar({
       $.identifier,
       $.string,
       $.number,
+      $.every_document,
     ))),
 
     labeled_parameter: $ => prec(2, choice(
       seq(
         field('label', $.identifier),
-        field('parameter', $.identifier),
+        field('parameter', choice($.identifier, $.expression)),
       ),
       seq(
         field('label', $.identifier),
         ':',
-        field('parameter', $.identifier),
+        field('parameter', choice($.identifier, $.expression)),
       ),
       // Objective-C style: handler_label appears as identifier in parse tree
       seq(
         field('label', alias($.handler_label, $.identifier)),
         ':',
-        field('parameter', $.identifier),
+        field('parameter', choice($.identifier, $.expression)),
       ),
     )),
 
@@ -467,8 +490,10 @@ module.exports = grammar({
     front_window: $ => token(prec(10, seq('front', /\s+/, 'window'))),
     selected_tab: $ => token(prec(10, seq('selected', /\s+/, 'tab'))),
     selected_window: $ => token(prec(10, seq('selected', /\s+/, 'window'))),
+    used_script_library_files: $ => token(prec(100, seq('used', /\s+/, 'script', /\s+/, 'library', /\s+/, 'files'))),
     every_item: $ => token(prec(10, seq('every', /\s+/, 'item'))),
     every_window: $ => token(prec(10, seq('every', /\s+/, 'window'))),
+    every_document: $ => token(prec(10, seq('every', /\s+/, 'document'))),
     // UI Scripting patterns
     scroll_area: $ => token(prec(10, seq('scroll', /\s+/, 'area'))),
     radio_group: $ => token(prec(10, seq('radio', /\s+/, 'group'))),
@@ -489,6 +514,7 @@ module.exports = grammar({
         )),
         optional(repeat1(choice(
           $.direct_parameter,
+          $.labeled_parameter,
           $.command_parameter,
           $.expression,
         ))),
@@ -506,6 +532,7 @@ module.exports = grammar({
         )),
         repeat1(choice(
           $.direct_parameter,
+          $.labeled_parameter,
           $.command_parameter,
           $.expression,
         )),
@@ -534,6 +561,7 @@ module.exports = grammar({
     with_clause: $ => seq(
       'with',
       field('option', $.property_name),
+      optional(field('value', $.expression)),
     ),
 
     without_clause: $ => seq(
@@ -543,10 +571,10 @@ module.exports = grammar({
 
     using_clause: $ => seq(
       'using',
-      choice(
-        $.property_name,
-        $.list,
-      ),
+      field('modifiers', choice(
+        prec.dynamic(1, $.property_name),  // Prefer multi-word like "command down"
+        $.expression,
+      )),
     ),
 
     // Property name (can be multi-word)
@@ -566,13 +594,29 @@ module.exports = grammar({
       $.selected_window,
       $.every_item,
       $.every_window,
+      $.every_document,
+      $.used_script_library_files,
       $.scroll_area,
       $.radio_group,
       $.radio_button,
-      // Generic multi-word properties
-      seq($.identifier, repeat1($.identifier)),
+      // Generic multi-word properties (any sequence of 2+ identifiers/keywords)
+      // Use dynamic precedence to prefer this over keyword matches in expression contexts
+      prec.dynamic(2, seq($._identifier_or_keyword_token, repeat1($._identifier_or_keyword_token))),
       // Single identifier (lowest precedence)
+      prec.dynamic(-1, $.identifier),
+    ),
+
+    // Identifier or keyword used as identifier (for property names that contain keywords)
+    _identifier_or_keyword_token: $ => choice(
       $.identifier,
+      alias('script', $.identifier),
+      alias('text', $.identifier),
+      alias('library', $.identifier),
+      alias('used', $.identifier),
+      alias('source', $.identifier),
+      alias('files', $.identifier),
+      alias('line', $.identifier),
+      alias('endings', $.identifier),
     ),
 
     // Expression Statement
@@ -606,12 +650,13 @@ module.exports = grammar({
       $.application_expression,
       $.path_to_expression,  // "path to" command in expression context
       $.method_call,  // Must be before property_access (higher precedence)
+      $.handler_call,  // Must be before property_access (uses same 's syntax)
       $.property_access,
       $.element_access,
       $.list,
       $.record,
+      $.property_name,  // Multi-word properties - no negative precedence
       $.identifier,
-      prec.dynamic(-1, $.property_name),  // Lower dynamic precedence so identifier is preferred
       $.string,
       $.number,
       $.boolean,
@@ -679,7 +724,7 @@ module.exports = grammar({
 
     application_expression: $ => prec(14, seq(
       'application',
-      field('name', $.string),
+      field('name', choice($.string, $.identifier)),
     )),
 
     property_access: $ => prec.left(15, seq(
@@ -688,14 +733,48 @@ module.exports = grammar({
       field('property', $.property_name),
     )),
 
-    element_access: $ => prec.left(15, seq(
-      field('element', $.property_name),
-      choice(
-        seq(field('index', $.number), 'of', field('object', $.expression)),
-        seq('of', field('object', $.expression)),
-        field('index', $.number),  // Allow implicit object (e.g., "window 1")
+    element_access: $ => prec.left(15, choice(
+      // Possessive form: object's element [index]
+      seq(
+        field('object', $.expression),
+        '\'s',
+        field('element', $.property_name),
+        optional(field('index', $.number)),
+      ),
+      // Of form: element [index] of object
+      seq(
+        field('element', $.property_name),
+        choice(
+          seq(field('index', $.number), 'of', field('object', $.expression)),
+          seq('of', field('object', $.expression)),
+          field('index', $.number),  // Allow implicit object (e.g., "window 1")
+        ),
       ),
     )),
+
+    handler_call: $ => prec.dynamic(5, choice(
+      // With object: obj's handler(args)
+      prec.left(16, seq(
+        field('object', $.expression),
+        '\'s',
+        field('name', $.identifier),
+        '(',
+        optional($.argument_list),
+        ')',
+      )),
+      // Without object: handler(args)
+      prec(3, seq(
+        field('name', $.identifier),
+        '(',
+        optional($.argument_list),
+        ')',
+      )),
+    )),
+
+    argument_list: $ => seq(
+      $.expression,
+      repeat(seq(',', $.expression)),
+    ),
 
     reference_expression: $ => seq(
       choice('a ref to', 'a reference to', 'ref to', 'reference to'),
@@ -757,10 +836,14 @@ module.exports = grammar({
       '}',
     ),
 
-    record_entry: $ => seq(
-      field('key', choice($.identifier, $.string)),
+    record_entry: $ => prec.dynamic(3, seq(
+      field('key', choice(
+        prec.dynamic(1, $.identifier),  // Prefer plain identifier for single-word keys
+        $.property_name,                // Use property_name for multi-word keys
+        $.string
+      )),
       ':',
       field('value', $.expression),
-    ),
+    )),
   },
 });

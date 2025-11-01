@@ -59,6 +59,10 @@
           "named": true
         },
         {
+          "type": "labeled_parameter",
+          "named": true
+        },
+        {
           "type": "using_clause",
           "named": true
         },
@@ -82,11 +86,30 @@
         "required": true,
         "types": [
           {
+            "type": "identifier",
+            "named": true
+          },
+          {
             "type": "string",
             "named": true
           }
         ]
       }
+    }
+  },
+  {
+    "type": "argument_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -482,6 +505,10 @@
         "required": true,
         "types": [
           {
+            "type": "every_document",
+            "named": true
+          },
+          {
             "type": "identifier",
             "named": true
           },
@@ -800,6 +827,10 @@
           "named": true
         },
         {
+          "type": "handler_call",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -872,6 +903,42 @@
       "types": [
         {
           "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "handler_call",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "argument_list",
           "named": true
         }
       ]
@@ -1200,6 +1267,10 @@
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "expression",
+            "named": true
+          },
           {
             "type": "identifier",
             "named": true
@@ -1617,6 +1688,10 @@
           "named": true
         },
         {
+          "type": "every_document",
+          "named": true
+        },
+        {
           "type": "every_item",
           "named": true
         },
@@ -1674,6 +1749,10 @@
         },
         {
           "type": "selected_window",
+          "named": true
+        },
+        {
+          "type": "used_script_library_files",
           "named": true
         }
       ]
@@ -1735,6 +1814,10 @@
         "types": [
           {
             "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "property_name",
             "named": true
           },
           {
@@ -3189,20 +3272,21 @@
   {
     "type": "using_clause",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "list",
-          "named": true
-        },
-        {
-          "type": "property_name",
-          "named": true
-        }
-      ]
+    "fields": {
+      "modifiers": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "property_name",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -3215,6 +3299,16 @@
         "types": [
           {
             "type": "property_name",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
             "named": true
           }
         ]
@@ -3464,6 +3558,10 @@
   {
     "type": "error",
     "named": false
+  },
+  {
+    "type": "every_document",
+    "named": true
   },
   {
     "type": "every_item",
@@ -3784,6 +3882,10 @@
   {
     "type": "use",
     "named": false
+  },
+  {
+    "type": "used_script_library_files",
+    "named": true
   },
   {
     "type": "using",

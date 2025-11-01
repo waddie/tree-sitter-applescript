@@ -47,6 +47,9 @@
 ; Parameter lists
 (parameter_list) @rainbow.scope
 
+; Argument lists (handler calls)
+(argument_list) @rainbow.scope
+
 ; Brackets
 [
   "(" ")"

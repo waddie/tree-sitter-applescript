@@ -16,7 +16,7 @@ end tell
     (application_command
       command: (identifier)
       (direct_parameter
-        parameter: (identifier))
+        parameter: (every_document))
       (with_clause
         option: (property_name (identifier))))))
 
@@ -38,7 +38,7 @@ end tell
     (application_command
       command: (identifier)
       (direct_parameter
-        parameter: (identifier))
+        parameter: (every_document))
       (without_clause
         option: (property_name (identifier))))))
 
@@ -221,7 +221,7 @@ end tell
     (application_command
       command: (identifier)
       (direct_parameter
-        parameter: (expression (string)))
+        parameter: (string))
       (using_clause
         modifiers: (expression
           (list

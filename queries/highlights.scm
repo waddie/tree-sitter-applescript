@@ -121,6 +121,9 @@
 (application_expression
   name: (string) @string.special)
 
+(application_expression
+  name: (identifier) @variable)
+
 ; Script references
 (script_reference
   (string) @string.special)
@@ -242,6 +245,10 @@
 ; Application command highlighting
 (application_command
   command: (identifier) @function.call)
+
+; Handler calls
+(handler_call
+  name: (identifier) @function.call)
 
 ; Tell statement targets
 (tell_statement

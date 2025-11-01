@@ -72,7 +72,7 @@ end tell
   (tell_statement
     target: (expression
       (application_expression
-        name: (expression (identifier))))
+        name: (identifier)))
     (expression_statement
       (expression (identifier)))))
 
@@ -96,8 +96,8 @@ end tell
     (tell_statement
       target: (expression
         (element_access
-          element: (property_name (identifier))
-          object: (expression (string))))
+          object: (expression (string))
+          element: (property_name (identifier))))
       (set_statement
         target: (expression (identifier))
         value: (expression (boolean))))))

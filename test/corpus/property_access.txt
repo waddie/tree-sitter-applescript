@@ -51,10 +51,8 @@ end tell
         target: (expression (identifier))
         value: (expression
           (property_name
-            (identifier)
-            (identifier)
-            (identifier)
-            (identifier)))))))
+            (used_script_library_files)
+            )))))))
 
 ================================================================================
 Set property by index
@@ -76,9 +74,9 @@ set myList's item 2 to 99
   (set_statement
     target: (expression
       (element_access
+        object: (expression (identifier))
         element: (property_name (identifier))
-        index: (number (integer))
-        object: (expression (identifier))))
+        index: (number (integer))))
     value: (expression (number (integer)))))
 
 ================================================================================
@@ -102,21 +100,21 @@ set data's item 3 to data's item 1 + data's item 2
   (set_statement
     target: (expression
       (element_access
+        object: (expression (identifier))
         element: (property_name (identifier))
-        index: (number (integer))
-        object: (expression (identifier))))
+        index: (number (integer))))
     value: (expression
       (binary_expression
         left: (expression
           (element_access
+            object: (expression (identifier))
             element: (property_name (identifier))
-            index: (number (integer))
-            object: (expression (identifier))))
+            index: (number (integer))))
         right: (expression
           (element_access
+            object: (expression (identifier))
             element: (property_name (identifier))
-            index: (number (integer))
-            object: (expression (identifier))))))))
+            index: (number (integer))))))))
 
 ================================================================================
 Quoted form of path

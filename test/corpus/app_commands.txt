@@ -362,11 +362,12 @@ end tell
       (direct_parameter
         parameter: (string))
       (using_clause
-        (list
-          (expression
-            (property_name (identifier) (identifier)))
-          (expression
-            (property_name (identifier) (identifier))))))))
+        modifiers: (expression
+          (list
+            (expression
+              (property_name (identifier) (identifier)))
+            (expression
+              (property_name (identifier) (identifier)))))))))
 
 ================================================================================
 Using clause with single modifier
@@ -382,4 +383,4 @@ keystroke "v" using command down
     (direct_parameter
       parameter: (string))
     (using_clause
-      (property_name (identifier) (identifier)))))
+      modifiers: (property_name (identifier) (identifier)))))

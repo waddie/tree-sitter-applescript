@@ -18,6 +18,10 @@
 (labeled_parameter
   parameter: (_) @parameter.inside)
 
+; Handler call arguments
+(argument_list
+  (expression) @parameter.inside)
+
 ; Comment text objects
 (comment) @comment.inside
 
