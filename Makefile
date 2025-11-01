@@ -4,7 +4,7 @@ endif
 
 LANGUAGE_NAME := tree-sitter-applescript
 HOMEPAGE_URL := https://github.com/waddie/tree-sitter-applescript
-VERSION := 0.0.1
+VERSION := 1.0.0
 
 # repository
 SRC_DIR := src

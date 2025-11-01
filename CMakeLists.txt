@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(tree-sitter-applescript
-        VERSION "0.0.1"
+        VERSION "1.0.0"
         DESCRIPTION "AppleScript grammar for tree-sitter"
         HOMEPAGE_URL "https://github.com/waddie/tree-sitter-applescript"
         LANGUAGES C)
