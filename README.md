@@ -1,6 +1,6 @@
 # tree-sitter-applescript
 
-Tree-sitter grammar for AppleScript with 90% test coverage (45/50 tests passing).
+Tree-sitter grammar for AppleScript.
 
 ## Features
 
@@ -55,42 +55,6 @@ tree-sitter test
 
 # Parse a file
 tree-sitter parse examples/sample.applescript
-
-# Interactive playground
-tree-sitter playground
-```
-
-## Project Structure
-
-```
-.
-├── grammar.js              # Grammar definition
-├── src/
-│   ├── parser.c           # Generated parser
-│   └── scanner.c          # External scanner (C)
-├── queries/
-│   └── highlights.scm     # Syntax highlighting
-├── test/corpus/           # Test cases
-├── bindings/              # Language bindings (C, Go, Node, Python, Rust, Swift)
-└── CLAUDE.md             # Development guide for Claude Code
-```
-
-## Editor Integration
-
-### Neovim with nvim-treesitter
-
-```lua
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "applescript" },
-  highlight = { enable = true },
-}
-```
-
-### Manual Installation
-
-```bash
-mkdir -p ~/.local/share/nvim/site/parser
-cp build/parser.so ~/.local/share/nvim/site/parser/applescript.so
 ```
 
 ## Known Limitations
@@ -115,17 +79,10 @@ This grammar uses:
 - **External scanner**: C scanner for context-sensitive tokenization
 - **Comprehensive tests**: 50 test cases covering all major language features
 
-Key files:
-- `grammar.js` - Grammar rules (650+ lines)
-- `src/scanner.c` - External scanner for advanced patterns
-- `SCANNER.md` - Scanner documentation and extension guide
-- `ISSUES.md` - Known limitations and workarounds
-
 ## Resources
 
 - [AppleScript Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/)
 - [Tree-sitter Documentation](https://tree-sitter.github.io/tree-sitter/)
-- [Development Guide](CLAUDE.md) - Commands, architecture, and known issues
 
 ## License
 
