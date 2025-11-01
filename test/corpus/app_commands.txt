@@ -1,0 +1,68 @@
+================================================================================
+Application command with "with" clause
+================================================================================
+
+create window with default profile
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (application_command
+    command: (identifier)
+    (direct_parameter
+      parameter: (identifier))
+    (with_clause
+      option: (property_name
+        (identifier)
+        (identifier)))))
+
+================================================================================
+Multi-word property access
+================================================================================
+
+set AppleScript's text item delimiters to " "
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression
+      (property_access
+        object: (expression (identifier))
+        property: (property_name
+          (identifier)
+          (identifier)
+          (identifier))))
+    value: (expression (string))))
+
+================================================================================
+Multi-word element access
+================================================================================
+
+set x to POSIX path of aFile
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (element_access
+        element: (property_name
+          (identifier)
+          (identifier))
+        object: (expression (identifier))))))
+
+================================================================================
+Application command with direct parameter
+================================================================================
+
+activate window
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (application_command
+    command: (identifier)
+    (direct_parameter
+      parameter: (identifier))))

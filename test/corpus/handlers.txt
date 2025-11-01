@@ -1,0 +1,37 @@
+================================================================================
+Simple handler with parentheses
+================================================================================
+
+on greet(userName)
+  return "Hello"
+end greet
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (handler_definition
+    (simple_handler
+      name: (identifier)
+      (parameter_list (identifier))
+      (return_statement
+        value: (expression (string)))
+      end_name: (identifier))))
+
+================================================================================
+Handler with no parameters
+================================================================================
+
+on run
+  set x to 5
+end run
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (handler_definition
+    (positional_handler
+      name: (identifier)
+      (set_statement
+        target: (expression (identifier))
+        value: (expression (number (integer))))
+      end_name: (identifier))))

@@ -1,0 +1,151 @@
+================================================================================
+Simple variable assignment
+================================================================================
+
+set x to 5
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression (number (integer)))))
+
+================================================================================
+String literal
+================================================================================
+
+set message to "Hello, World!"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression (string))))
+
+================================================================================
+Simple if statement
+================================================================================
+
+if x > 5 then
+  return true
+end if
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    condition: (expression
+      (binary_expression
+        left: (expression (identifier))
+        right: (expression (number (integer)))))
+    (return_statement
+      value: (expression (boolean)))))
+
+================================================================================
+Repeat loop with times
+================================================================================
+
+repeat 5 times
+  set x to x + 1
+end repeat
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (repeat_statement
+    (repeat_times
+      count: (expression (number (integer)))
+      (set_statement
+        target: (expression (identifier))
+        value: (expression
+          (binary_expression
+            left: (expression (identifier))
+            right: (expression (number (integer)))))))))
+
+================================================================================
+Tell statement
+================================================================================
+
+tell application "Finder"
+  activate
+end tell
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (tell_statement
+    target: (expression
+      (application_expression
+        name: (string)))
+    (expression_statement
+      (expression (identifier)))))
+
+================================================================================
+List literal
+================================================================================
+
+set myList to {1, 2, 3}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (list
+        (expression (number (integer)))
+        (expression (number (integer)))
+        (expression (number (integer)))))))
+
+================================================================================
+Record literal
+================================================================================
+
+set myRecord to {name:"John", age:30}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (set_statement
+    target: (expression (identifier))
+    value: (expression
+      (record
+        (record_entry
+          key: (identifier)
+          value: (expression (string)))
+        (record_entry
+          key: (identifier)
+          value: (expression (number (integer))))))))
+
+================================================================================
+Line comment
+================================================================================
+
+-- This is a comment
+set x to 5
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (comment)
+  (set_statement
+    target: (expression (identifier))
+    value: (expression (number (integer)))))
+
+================================================================================
+Block comment
+================================================================================
+
+(* This is a
+   block comment *)
+set x to 5
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (comment)
+  (set_statement
+    target: (expression (identifier))
+    value: (expression (number (integer)))))

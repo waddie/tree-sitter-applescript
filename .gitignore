@@ -1,0 +1,9 @@
+node_modules
+bin
+build
+*.log
+
+additional_examples/*
+.DS_Store
+.claude/*
+CLAUDE.md
